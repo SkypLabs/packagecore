@@ -8,6 +8,8 @@ license.
 Requirements
 ------------
 
+PackageCore is written in `python 3` and uses the `PyYAML` module.
+
 PackageCore currently utilizes Docker to provide the distribution environments
 for building and testing packages.
 
@@ -17,14 +19,14 @@ Execution
 
 You can build packages by executing:
 ```
-packagecore
+packagecore <version> [<release num>]
 ```
-from the root of the directory.
+from the source directory.
 
 In your source directory if `packagecore.yaml` contains the configuration.
 Otherwise, the configuration file can be explicitly specified:
 ```
-packagecore -c myfile.yaml
+packagecore -c myfile.yaml <version> [<release num>]
 ```
 
 
