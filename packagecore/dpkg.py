@@ -168,6 +168,10 @@ class DebianPackage(object):
   #
   # @return None 
   def install(self, container):
+    # manually install dependencies
+    container.execute(["/usr/bin/apt-get", "update", "-qy"])
+    container.execute(["/usr/bin/apt-get", "install", "-qy"] + \
+        self._data.runDeps)
     # test package
     container.execute(["/usr/bin/dpkg", "-i", \
         os.path.join(container.getSharedDir(), self.getName())])
