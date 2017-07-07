@@ -200,8 +200,12 @@ cp "${OUTRPM}" "${RPM}"
   # @return None 
   def install(self, container):
     # test package
-    container.execute(["rpm", "-i", \
-        os.path.join(container.getSharedDir(), self.getName())])
+    if self._useYum:
+      container.execute(["yum", "install", \
+          os.path.join(container.getSharedDir(), self.getName())])
+    else:
+      container.execute(["dnf", "install", \
+          os.path.join(container.getSharedDir(), self.getName())])
     # sudo
 
 
