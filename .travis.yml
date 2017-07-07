@@ -1,11 +1,24 @@
 sudo: required
 services:
-  - docker
-python: "3.6"
+- docker
+python: '3.6'
 before_install:
-  - python3 -m pip install pyyaml 
+- python3 -m pip install pyyaml
 script:
-  - ./setup.py test
-  - ./setup.py install
-  - cd test && packagecore 1.2.3 4
-  
+- "./setup.py test"
+- "./setup.py install"
+- cd test && packagecore 1.2.3 4
+before_deploy:
+  - packagecore "${TRAVIS_TAG}"
+deploy:
+  provider: releases
+  api_key:
+    secure: "${SECURE_DEPLOY_KEY}"
+  file_glob: true
+  file:
+    - packagecore-*.deb 
+    - packagecore-*.pkg.tar.xz 
+    - packagecore-*.rpm
+  skip_cleanup: true
+  on:
+    tags: true
