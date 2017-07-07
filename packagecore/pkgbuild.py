@@ -51,7 +51,7 @@ class PkgBuild(object):
     self._sanitizedVersion = _sanitize(data.version)
 
     # setup internal file structure
-    self._pkgBuildDir = None 
+    self._pkgBuildDir = None
     self._pkgTar = "pkg.tar"
 
 
@@ -176,9 +176,13 @@ class PkgBuild(object):
   def prep(self, container):
     container.execute(["pacman", "-Syy", "--noconfirm", "sudo", "binutils", \
         "fakeroot"])
-    container.execute(["useradd", "-m", "-u", "1000", "builder"])
+    uid = os.getuid()
+    if uid == 0:
+      # if we're running as root, make up a user
+      uid = 1000
+    container.execute(["useradd", "-m", "-u", str(uid), "packagecore"])
     container.execute(["/bin/bash", "-c", \
-        "echo 'builder ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers"])
+        "echo 'packagecore ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers"])
     # create our working directory
     self._pkgBuildDir = os.path.join(container.getSharedDir(), \
         "arch-pkg")
@@ -186,7 +190,7 @@ class PkgBuild(object):
 
     self.generatePKGBUILDFile(container)
 
-  
+
   ##
   # @brief Build the arch package.
   #
@@ -219,9 +223,9 @@ class PkgBuild(object):
     # docker doesn't let us change the working directory using `exec`, so we
     # need to use a shell
     container.execute(["/bin/bash", "-c", \
-        ("pushd '%s' && sudo -u builder makepkg --skipinteg --noconfirm --noprogressbar -sr " \
-        "--config='%s' PACKAGER='%s' && popd") % (self._pkgBuildDir, makePkgConf,
-        self._data.maintainer)])
+        ("pushd '%s' && sudo -u packagecore makepkg --skipinteg --noconfirm " \
+        "--noprogressbar -sr --config='%s' PACKAGER='%s' && popd") % \
+        (self._pkgBuildDir, makePkgConf, self._data.maintainer)])
 
 
   ##
