@@ -13,7 +13,7 @@ before_deploy:
 deploy:
   provider: releases
   api_key:
-    secure: "${SECURE_DEPLOY_KEY}"
+    secure: K6GvRJHsULvchyBsNCqGN5upgLvo0o7H0zxUxn9xs5Jzm13qvxw4/X5/f+vuKB8LRUF6x5c9eIXTXC3TnEOWq3PHrB1VZp4hIn+OXuEX0/J32dXTFgwDNLhldtn+/BrDlDoi6Gtc7hIvJSRzTEGbYtyqTPlwljl9mp+LfsJiHfBD/muEHrzUOYhlP7eGFrkuVLJ+Lu0EOE1LiHF7Z0+gdAdhtq6YGLy4N9elm4DN3HKYLYgGHG30ffypIJcSTFce3vdkqV0EsGjhqtCTm2OloAzlUGZ3EVXVC+AehFqUssSDpmvcMlFqogrL0tAz5/gQq1VnPJgGSVvgmg6gKZDnCJ9bgNQIfZEukwYIrY2AhKvsxoUB+vcNq0cdgdK3mgUm1e1lBTJYPkmQ2tU/D1UEql4bnmzMlanLYqDCJoMTMqu618DSlBqEWSxUwOiSFTyVou7oTHVQZGxs4DpkgWbI1XPSfaQfNniFvJzCe/Ca9ggt9WgG4SyHUsa/iwhS/pdERfspxXkdGRK92vkb3TjBBuKC6QBt0+BbCFneY6B/XNEf+tvMeqiLbLSDPdCQatD5fp7j1eCw3ybCa7SMIdUzfrgLmxnPysb5Mz0WIvraC3SaWsooUCDK3VTCDblwkq6sZNqYTKNobPXT2skdmZaYNLlUxPHKM2wA/aDpPAODkRw=
   file_glob: true
   file:
     - packagecore-*.deb
