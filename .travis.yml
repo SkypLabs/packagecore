@@ -1,0 +1,11 @@
+sudo: required
+services:
+  - docker
+python: "3.6"
+before_install:
+  - python3 -m pip install pyyaml 
+script:
+  - ./setup.py test
+  - ./setup.py install
+  - cd test && packagecore 1.2.3 4
+  
