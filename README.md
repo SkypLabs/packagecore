@@ -1,6 +1,8 @@
 PackageCore
 ===========
 
+<img src="https://travis-ci.org/BytePackager/packagecore.svg?branch=master"/>
+
 Python library for building Linux packages. It is distributed under the GPLv2
 license.
 
