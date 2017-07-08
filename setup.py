@@ -8,6 +8,12 @@ with open("VERSION", "r") as versionFile:
 
 setup(
   name="PackageCore",
+  description="Utility for building Linux packages for multiple " \
+      "distributions.",
+  author="Dominique LaSalle",
+  author_email="dominique@bytepackager.com",
+  url="https://github.com/bytepackager/packagecore",
+  license="GPL2",
   version=version,
   packages=find_packages(),
   test_suite="packagecore",
