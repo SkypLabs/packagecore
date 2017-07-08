@@ -7,7 +7,7 @@ with open("VERSION", "r") as versionFile:
   version = versionFile.read().strip()
 
 setup(
-  name="PackageCore",
+  name="packagecore",
   description="Utility for building Linux packages for multiple " \
       "distributions.",
   author="Dominique LaSalle",
