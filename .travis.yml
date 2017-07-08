@@ -8,7 +8,7 @@ script:
   - if [[ "${TRAVIS_TAG}" == "v${TRAVIS_TAG#v}" ]]; then [[ "${TRAVIS_TAG#v}" != "$(cat VERSION)" ]] && exit 1; fi
   - ./setup.py test
   - ./setup.py sdist
-  - sudo pip install "dist/packagecore-$(cat VERSION).tar.gz"
+  - python3 -m pip install "dist/packagecore-$(cat VERSION).tar.gz"
   - pushd test; packagecore 1.2.3 4; popd
 before_deploy:
   - packagecore "${TRAVIS_TAG#v}"
