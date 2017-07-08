@@ -5,8 +5,9 @@ python: '3.6'
 before_install:
   - python3 -m pip install pyyaml
 script:
-  - "./setup.py test"
-  - "./setup.py install"
+  - if [[ "${TRAVIS_TAG}" == "v${TRAVIS_TAG#v}" ]]; then [[ "${TRAVIS_TAG#v}" != "$(cat VERSION)" ]] && exit 1; fi
+  - ./setup.py test
+  - ./setup.py install
   - pushd test; packagecore 1.2.3 4; popd
 before_deploy:
   - packagecore "${TRAVIS_TAG#v}"
