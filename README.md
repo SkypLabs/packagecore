@@ -16,6 +16,24 @@ PackageCore currently utilizes Docker to provide the distribution environments
 for building and testing packages.
 
 
+
+Installation
+------------
+
+The easiest way to get PackageCore is via `pip`.
+
+```
+pip install packagecore
+```
+
+Alternatively, Linux packages are provided on our release page or you can
+install in manually from this repo using the `setup.py` module.
+
+```
+./setup.py install
+```
+
+
 Execution
 ---------
 
