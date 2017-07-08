@@ -14,6 +14,8 @@ setup(
   author_email="dominique@bytepackager.com",
   url="https://github.com/bytepackager/packagecore",
   license="GPL2",
+  install_requires="pyyaml",
+  python_requires=">=3.0",
   version=version,
   packages=find_packages(),
   test_suite="packagecore",
