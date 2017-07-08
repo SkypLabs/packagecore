@@ -26,12 +26,17 @@ class Packager(object):
   # @brief Create a packager object.
   #
   # @param conf The configuration to use.
+  # @param outputDir The directory to output packages into.
   # @param version The version of packages to generate.
   # @param release The release number.
   #
   # @return The new Packager.
-  def __init__(self, conf, version, release):
+  def __init__(self, conf, outputDir, version, release):
     self._queue = []
+    self._outputDir = outputDir
+
+    if not os.path.exists(self._outputDir):
+      os.makedirs(self._outputDir)
 
     # set globals
     projectCompileCommands = []
@@ -148,6 +153,6 @@ class Packager(object):
         container.stop()
 
       # move the package to the current directory
-      shutil.move(tmpfile, "./")
+      shutil.move(tmpfile, self._outputDir)
 
 

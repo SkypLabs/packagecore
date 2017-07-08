@@ -4,6 +4,7 @@ __pycache__
 *.swp
 *.deb
 *.rpm
+*.pkg.tar.xz
 
 # setup.py stuff
 dist

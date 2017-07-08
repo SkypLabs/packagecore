@@ -27,23 +27,27 @@ def main():
   # defaults
   release=1
   configFilename="packagecore.yaml"
+  outputdir="./"
 
   usage = "usage: %prog [options] <version> [<release number>]"
   parser = optparse.OptionParser(usage=usage)
 
   parser.add_option("-c", "--config", dest="configfile", \
-      metavar="<yaml file>",
+      metavar="<yaml file>", \
       default=configFilename, help="The path to the yaml configuration " \
       "file. Defaults to %default.")
+
+  parser.add_option("-o", "--outputdir", dest="outputdir", \
+      metavar="<output directory>", default=outputdir, \
+      help="The directory to " \
+      "put generated packages into. If the directory does not exist, it " \
+      "will be created. Defaults to %default.")
 
   parser.add_option("-d", "--distributions", action="store_true", \
       dest="showdistributions", help="Show a list of available Linux " \
       "distributions to use as targets in the 'packages' section.")
 
   (options, args) = parser.parse_args()
-
-  if not options.configfile is None:
-    configFilename = options.configfile
 
   if not options.showdistributions is None:
     showDistributions()
@@ -62,10 +66,11 @@ def main():
       release=int(args[1])
     print("Building version '%s' release '%d'." % (version, release))
 
-    conf = YAMLConfigFile(configFilename)
+    conf = YAMLConfigFile(options.configfile)
     print("Parse '%s' configuration." % configFilename)
 
-    p = Packager(conf=conf.getData(), version=version, release=release)
+    p = Packager(conf=conf.getData(), outputDir=options.outputdir, \
+        version=version, release=release)
     p.run()
 
   return 0
