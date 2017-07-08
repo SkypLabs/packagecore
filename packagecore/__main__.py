@@ -14,6 +14,13 @@ import optparse
 
 from .configfile import YAMLConfigFile
 from .packager import Packager
+from .distributions import DATA
+
+
+def showDistributions():
+  print("Available distributions to use as targets in the 'packages' section:")
+  for distname, data in DATA.items():
+    print("\t%s" % distname)
 
 
 def main():
@@ -23,31 +30,45 @@ def main():
 
   usage = "usage: %prog [options] <version> [<release number>]"
   parser = optparse.OptionParser(usage=usage)
+
   parser.add_option("-c", "--config", dest="configfile", \
       metavar="<yaml file>",
       default=configFilename, help="The path to the yaml configuration " \
       "file. Defaults to %default.")
-  
+
+  parser.add_option("-d", "--distributions", action="store_true", \
+      dest="showdistributions", help="Show a list of available Linux " \
+      "distributions to use as targets in the 'packages' section.")
+
   (options, args) = parser.parse_args()
-  if len(args) == 0:
-    print("Must supply a version string." ,file=sys.stderr)
-    parser.print_help(file=sys.stderr)
-    return -1
-  elif len(args) > 2:
-    print("Too many arguments.", file=sys.stderr)
-    parser.print_help(file=sys.stderr)
-    return -1
 
-  version=args[0]
-  if len(args) == 2: 
-    release=int(args[1])
-  print("Building version '%s' release '%d'." % (version, release))
+  if not options.configfile is None:
+    configFilename = options.configfile
 
-  conf = YAMLConfigFile(configFilename)
-  print("Parse '%s' configuration." % configFilename)
+  if not options.showdistributions is None:
+    showDistributions()
+  else:
+    if len(args) == 0:
+      print("Must supply a version string." ,file=sys.stderr)
+      parser.print_help(file=sys.stderr)
+      return -1
+    elif len(args) > 2:
+      print("Too many arguments.", file=sys.stderr)
+      parser.print_help(file=sys.stderr)
+      return -1
 
-  p = Packager(conf=conf.getData(), version=version, release=release)
-  p.run()
+    version=args[0]
+    if len(args) == 2:
+      release=int(args[1])
+    print("Building version '%s' release '%d'." % (version, release))
+
+    conf = YAMLConfigFile(configFilename)
+    print("Parse '%s' configuration." % configFilename)
+
+    p = Packager(conf=conf.getData(), version=version, release=release)
+    p.run()
+
+  return 0
 
 if __name__ == "__main__":
   ret = main()
