@@ -56,10 +56,10 @@ Configuration
 PackageCore uses YAML files for configuration. The basic structure is:
 
 ```
-name: wx-calc 
+name: wx-calc
 metadata:
   maintainer: Dominique LaSalle <dominique@bytepackager.com>
-  license: GPL3 
+  license: GPL3
   summary: A simple calculator using wxWidgets.
   homepage: https://solidlake.com
 commands:
@@ -81,21 +81,21 @@ packages:
       - wxgtk
   centos7.3:
     buildeps:
-      - gcc 
+      - gcc
       - cmake
       - wxGTK3-devel
     deps:
       - wxGTK3
   fedora25:
     buildeps:
-      - gcc 
+      - gcc
       - cmake
       - wxGTK3-devel
     deps:
       - wxGTK3
   ubuntu16.04:
     buildeps:
-      - gcc 
+      - gcc
       - cmake
       - libwxgtk3-dev
     deps:
@@ -117,3 +117,34 @@ override the top-level commands inside of the package listing:
         - cmake ../ -DCMAKE_INSTALL_PREFIX=/usr -DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config-3.0
 ```
 
+
+Usage in Travis-CI
+------------------
+
+To use in `travis-ci`, you must be using at least Ubuntu 14.04 (Trusty) with
+`sudo`. Then, add the following `before_deploy` commands:
+
+```
+before_deploy:
+  - sudo apt-get update -qy
+  - sudo apt-get install -qy python3 python3-pip
+  - python3 -m pip install packagecore
+  - packagecore -o dist "${TRAVIS_TAG#v}"
+```
+
+Which will build your packages with the version defined by your tag (assumes
+you prefixed it with a `v`), and place the packages in a `dist` directory. Then
+add the following to the `deploy` section:
+
+```
+deploy:
+  ...
+  file_glob: true
+  file:
+    - dist/*
+  ...
+```
+
+
+
+Assuming you name your tags `v1.2.3`
