@@ -153,7 +153,7 @@ cp "${OUTRPM}" "${RPM}"
     # will need to be back ported for centos
     if self._useYum:
       container.execute(["/usr/bin/yum", "install", "-y", "yum-utils", \
-          "rpm-build", "which"])
+          "rpm-build", "which", "make"])
       # try to install rpmrebuild -- if it fails, add epel and try again
       try:
         container.execute(["/usr/bin/yum", "install", "-y", "rpmrebuild"])
@@ -163,7 +163,7 @@ cp "${OUTRPM}" "${RPM}"
     else:
       container.execute(["/usr/bin/dnf", "install", "-y", \
           "dnf-command(repoquery)", "rpm-build", "rpmrebuild", \
-          "dnf-command(builddep)", "which"])
+          "dnf-command(builddep)", "which", "make"])
 
     self._specFile = os.path.join(container.getSharedDir(), "pkg.spec")
     self.generateSpecFile(container)

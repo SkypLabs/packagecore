@@ -8,6 +8,7 @@
 
 import shutil
 import os
+import traceback
 
 from .builddata import BuildData
 from .docker import Docker
@@ -120,39 +121,45 @@ class Packager(object):
       else:
         raise UnknownPackageTypeError("Unknown packaging type: %s" % pkgType) 
 
-      print("Building package for %s: %s" % (job.os, str(job)))
-      tmpfile = os.path.join("/tmp", recipe.getName())
-
-      # build the package
-      container = docker.start(build["dockerImage"])
-
-      print("Using shared directory '%s' and source directory '%s'." %
-          (container.getSharedDir(), container.getSourceDir()))
-
       try:
-        # copy in source -- we must be in the source directory
-        container.copySource("./")
+        print("Building package for %s: %s" % (job.os, str(job)))
+        tmpfile = os.path.join("/tmp", recipe.getName())
 
-        recipe.prep(container)
-        recipe.build(container)
+        # build the package
+        container = docker.start(build["dockerImage"])
 
-        # copy out finished package
-        shutil.copy(
-            os.path.join(container.getSharedDir(), recipe.getName()), \
-            tmpfile)
-      finally:
-        container.stop()
+        print("Using shared directory '%s' and source directory '%s'." %
+            (container.getSharedDir(), container.getSourceDir()))
 
-      # spawn a new docker container
-      container = docker.start(build["dockerImage"])
-      try:
-        # copy in the package for installation
-        shutil.copy(tmpfile, container.getSharedDir())
-        recipe.install(container)
-      finally:
-        container.stop()
+        try:
+          # copy in source -- we must be in the source directory
+          container.copySource("./")
 
-      # move the package to the current directory
-      shutil.move(tmpfile, self._outputDir)
+          recipe.prep(container)
+          recipe.build(container)
+
+          # copy out finished package
+          shutil.copy(
+              os.path.join(container.getSharedDir(), recipe.getName()), \
+              tmpfile)
+        finally:
+          container.stop()
+
+        # spawn a new docker container
+        container = docker.start(build["dockerImage"])
+        try:
+          # copy in the package for installation
+          shutil.copy(tmpfile, container.getSharedDir())
+          recipe.install(container)
+        finally:
+          container.stop()
+
+        # move the package to the current directory
+        shutil.move(tmpfile, self._outputDir)
+      except:
+        print("Failed to build package for '%s'." % job.os)
+        print(traceback.format_exc())
+        
+        
 
 

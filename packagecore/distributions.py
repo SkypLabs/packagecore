@@ -11,7 +11,7 @@
 
 DATA = {
   "archlinux": {
-    "dockerImage": "greyltc/archlinux:latest",
+    "dockerImage": "packagecore/archlinux:latest",
     "packageType": "pkgbuild"
   },
   "centos6.9": {
