@@ -3,6 +3,8 @@ PackageCore
 
 <img src="https://travis-ci.org/BytePackager/packagecore.svg?branch=master"/>
 
+<img src="https://circleci.com/gh/BytePackager/packagecore/tree/master.svg?style=svg"/>
+
 Python library for building Linux packages. It is distributed under the GPLv2
 license.
 
@@ -145,6 +147,24 @@ deploy:
   ...
 ```
 
-
-
 Assuming you name your tags `v1.2.3`
+
+
+Usage in Circle-CI
+------------------
+
+To use in `circle-ci`, add the following to your configuration.
+
+```
+machine:
+  services:
+    - docker
+...
+deployment:
+  package:
+    tag: /^v.*$/
+    commands:
+      - sudo apt-get install python3 python3-pip 
+      - sudo python3 -m pip install packagecore
+      - packagecore -o "${CIRCLE_ARTIFACTS}" "${CIRCLE_TAG}"
+```
