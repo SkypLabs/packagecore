@@ -94,7 +94,7 @@ class DockerContainer(object):
   # @param useLXC Use lxc-attach instead of 'exec' command.
   #
   # @return The docker container.
-  def __init__(self, imageName, useLXC=False):
+  def __init__(self, imageName, useLXC):
     self._image = imageName
     # get a unique name
     self._name = "packagecore-%x" % random.randrange(0,2**64)
@@ -254,7 +254,7 @@ class Docker(object):
   # @return The started container.
   def start(self, dockerImage):
     self.__fetchImage(dockerImage)
-    return DockerContainer(dockerImage)
+    return DockerContainer(imageName=dockerImage, useLXC=self._useLXC)
 
 
   ##
