@@ -33,8 +33,21 @@ class DockerError(Exception):
   pass
 
 
+def _lxcAttachCommand(cmd, containerName):
+  p = Popen(["sudo lxc-attach -n " \
+      "\"$(docker inspect --format \"{{.Id}}\" %s)\" -- %s" % \
+      (containerName, " ".join("\"{0}\"".format(c) for c in cmd))], shell=True)
+  rc = p.wait()
+  if rc != 0:
+    raise DockerError("Command '%s' returned %d." % (cmd, rc))
+
+
+def _dockerExecCOmmand(cmd, containerName):
+  _checkedDockerCommand(["exec", containerName] + cmd)
+
+
 def _checkedDockerCommand(cmd):
-  rc = _uncheckedDockerCommand(cmd) 
+  rc = _uncheckedDockerCommand(cmd)
   if rc != 0:
     raise DockerError("Command '%s' returned %d." % (cmd, rc))
 
@@ -43,8 +56,6 @@ def _uncheckedDockerCommand(cmd):
   proc = Popen(["docker"] + cmd)
   rc = proc.wait()
   return rc
-
-
 
 
 class MockContainer(object):
@@ -80,12 +91,15 @@ class DockerContainer(object):
   # @brief Create a new docker container (left running).
   #
   # @param imageName The image to create it from.
+  # @param useLXC Use lxc-attach instead of 'exec' command.
   #
   # @return The docker container.
-  def __init__(self, imageName):
+  def __init__(self, imageName, useLXC=False):
     self._image = imageName
     # get a unique name
     self._name = "packagecore-%x" % random.randrange(0,2**64)
+
+    self._useLXC = useLXC
 
     # make the shared directory
     if os.path.exists(self.getSharedDir()):
@@ -130,7 +144,10 @@ class DockerContainer(object):
       cmd=[cmd]
     if not isinstance(cmd, list):
       raise InputError("Requires list of commands, not '%s'" % type(cmd))
-    _checkedDockerCommand(["exec", self._name] + cmd)
+    if not self._useLXC:
+      _checkedDockerCommand(["exec", self._name] + cmd)
+    else:
+      _lxcAttachCommand(cmd, self._name)
 
 
   ##
@@ -148,13 +165,13 @@ class DockerContainer(object):
   #
   # @return None
   def copySource(self, localPath):
-    shutil.copytree(localPath, self.getSourceDir()) 
+    shutil.copytree(localPath, self.getSourceDir())
 
 
   ##
   # @brief Get the source directory path inside of the container.
   #
-  # @return 
+  # @return
   def getSourceDir(self):
     return os.path.join(self.getSharedDir(), "src")
 
@@ -162,7 +179,7 @@ class DockerContainer(object):
   ##
   # @brief Get the name of the underlying docker image.
   #
-  # @return 
+  # @return
   def getImageName(self):
     return self._image
 
@@ -203,9 +220,20 @@ class Docker(object):
   ##
   # @brief Initialize a new docker wrapper.
   #
-  # @return The new Docker wrapper. 
+  # @return The new Docker wrapper.
   def __init__(self):
-    pass
+    # determine if we're using lxc or libcontainer
+    grep = Popen(["docker", "info"], stdout=PIPE, stderr=PIPE)
+    stdout, stderr = grep.communicate()
+    output = str(stdout)
+    print("DOCKER_INFO")
+    print(output)
+    if output.find("runc") >= 0 or output.find("windows") >= 0:
+      print("Using 'exec'")
+      self._useLXC = False
+    else:
+      print("Using 'lxc-attach'")
+      self._useLXC = True
 
 
   ##
@@ -223,7 +251,7 @@ class Docker(object):
   #
   # @param dockerImage The name of the image to start.
   #
-  # @return The started container. 
+  # @return The started container.
   def start(self, dockerImage):
     self.__fetchImage(dockerImage)
     return DockerContainer(dockerImage)
