@@ -106,7 +106,11 @@ class Packager(object):
   #
   # @return None 
   def run(self):
+    success = True 
     docker = Docker()
+    if len(self._queue) == 0:
+      print("No packages to build.")
+      success = False
     for job in self._queue:
       build = BUILDS[job.os]
       pkgType = build["packageType"]
@@ -159,6 +163,8 @@ class Packager(object):
       except:
         print("Failed to build package for '%s'." % job.os)
         print(traceback.format_exc())
+        success = False
+    return success 
         
         
 

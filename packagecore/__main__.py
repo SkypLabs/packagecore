@@ -51,6 +51,7 @@ def main():
 
   if not options.showdistributions is None:
     showDistributions()
+    return 0
   else:
     if len(args) == 0:
       print("Must supply a version string." ,file=sys.stderr)
@@ -71,9 +72,11 @@ def main():
 
     p = Packager(conf=conf.getData(), outputDir=options.outputdir, \
         version=version, release=release)
-    p.run()
+    if p.run():
+      return 0
+    else:
+      return 1
 
-  return 0
 
 if __name__ == "__main__":
   ret = main()
