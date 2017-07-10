@@ -1,0 +1,11 @@
+machine:
+  pre:
+    - sudo apt-get install python3 python3-pip 
+  services:
+    - docker
+dependencies:
+  pre:
+    - ./setup.py test
+test:
+  override:
+    - python3 -m packagecore "$(cat VERSION)" 
