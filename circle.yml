@@ -1,12 +1,14 @@
 machine:
-  python:
-    version:
-      - 3.2.0
   services:
     - docker
-dependencies:
-  pre:
-    - ./setup.py test
-test:
   override:
-    - python3 -m packagecore "$(cat VERSION)" 
+    - pyenv global 3.6.1
+test:
+  pre:
+    - sudo service docker start
+  override:
+    - ./setup.py test
+    - ./setup.py sdist
+    - python3 -m pip install -vv --upgrade --force-reinstall "dist/packagecore-$(cat VERSION).tar.gz"
+    - pushd test; packagecore 1.2.3 4 || exit 1; popd
+    - python3 -m pip uninstall packagecore
