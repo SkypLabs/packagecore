@@ -5,6 +5,8 @@ metadata:
   summary: Utility for generating Linux packages.
   homepage: https://bytepackager.com
 commands:
+  pre:
+    - uname -a
   compile:
     - gcc test.c -o test 
   install:
@@ -19,6 +21,9 @@ packages:
   centos7.3:
     builddeps:
       - gcc
+    commands:
+      pre:
+        - yum install epel-release
   fedora25:
     builddeps:
       - gcc

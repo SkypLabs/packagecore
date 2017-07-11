@@ -87,7 +87,7 @@ class DebianPackage(object):
     # create post install script
     if len(self._data.postInstallCommands) > 0:
       generateScript(postFilePath, \
-          "\n".join(self._data.postInstallCommands))
+          self._data.postInstallCommands)
 
 
   ##
@@ -130,13 +130,13 @@ class DebianPackage(object):
     buildScriptFilenameLocal = os.path.join(container.getSourceDir(), \
         buildScriptFilename)
 
-    generateScript(buildScriptFilenameLocal, \
-        ("cd %s\n" % container.getSourceDir()) + \
-        "\n".join(self._data.compileCommands))
-
     destDir = self._pkgBuildDir
     buildEnv = BuildVariables(destDir=destDir, \
         sourceDir=container.getSourceDir())
+
+    generateScript(buildScriptFilenameLocal, \
+        ("cd %s\n" % container.getSourceDir()) + \
+        self._data.compileCommands, buildEnv.generate())
 
     # create install script
     installScriptFilename = ".bytepackager_install.sh"
@@ -145,7 +145,7 @@ class DebianPackage(object):
 
     generateScript(installScriptFilenameLocal, \
         ("cd %s\n" % container.getSourceDir()) + \
-        "\n".join(self._data.installCommands), buildEnv.generate())
+        self._data.installCommands, buildEnv.generate())
 
     # perform build
     container.execute(buildScriptFilenameLocal)

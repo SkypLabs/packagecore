@@ -16,10 +16,22 @@ from .pkgbuild import PkgBuild
 from .dpkg import DebianPackage
 from .rpm import RPM
 from .distributions import DATA as BUILDS
+from .scriptfile import generateScript 
 
 
 class UnknownPackageTypeError(Exception):
   pass
+
+
+def _stringifyCommands(cmds):
+  if isinstance(cmds, list):
+    cmds = "\n".join(cmds)
+  elif isinstance(cmds, str):
+    pass
+  else:
+    raise TypeError("Expected commands to be a string or list. Not '%s'." % \
+        type(cmds))
+  return cmds
 
 
 class Packager(object):
@@ -40,38 +52,46 @@ class Packager(object):
       os.makedirs(self._outputDir)
 
     # set globals
-    projectCompileCommands = []
-    projectInstallCommands = [] 
-    projectPostInstallCommands = []
-    projectTestInstallCommands = []
+    projectPreCommands = ""
+    projectCompileCommands = ""
+    projectInstallCommands = "" 
+    projectPostInstallCommands = ""
+    projectTestInstallCommands = ""
     if "commands" in conf:
       commands = conf["commands"]
+      if "pre" in commands:
+        projectPreCommands = _stringifyCommands(commands["pre"])
       if "compile" in commands:
-        projectCompileCommands = commands["compile"]
+        projectCompileCommands = _stringifyCommands(commands["compile"])
       if "install" in commands:
-        projectInstallCommands = commands["install"]
+        projectInstallCommands = _stringifyCommands(commands["install"])
       if "postInstall" in commands:
-        projectPostInstallCommands = commands["postInstall"]
+        projectPostInstallCommands = \
+            _stringifyCommands(commands["postInstall"])
       if "testInstall" in commands:
-        projectTestInstallCommands = commands["testInstall"]
+        projectTestInstallCommands = \
+            _stringifyCommands(commands["testInstall"])
 
     # parse packages 
     for osName, data in conf["packages"].items():
       # set package specific commnds
+      preCommands = projectPreCommands
       compileCommands = projectCompileCommands 
       installCommands = projectInstallCommands 
       postInstallCommands = projectPostInstallCommands 
       testInstallCommands = projectTestInstallCommands 
       if not data is None and "commands" in data:
         commands = data["commands"]
+        if "pre" in commands:
+          projectPreCommands = _stringifyCommands(commands["pre"])
         if "compile" in commands:
-          compileCommands = commands["compile"]
+          compileCommands = _stringifyCommands(commands["compile"])
         if "install" in commands:
-          installCommands = commands["install"]
+          installCommands = _stringifyCommands(commands["install"])
         if "postInstall" in commands:
-          postInstallCommands = commands["postInstall"]
+          postInstallCommands = _stringifyCommands(commands["postInstall"])
         if "testInstall" in commands:
-          testInstallCommands = commands["testInstall"]
+          testInstallCommands = _stringifyCommands(commands["testInstall"])
 
       # construct it with the required fields
       b = BuildData(
@@ -79,6 +99,7 @@ class Packager(object):
         version=version,
         releaseNum=release,
         os=osName,
+        preCommands=preCommands,
         compileCommands=compileCommands,
         installCommands=installCommands,
         postInstallCommands=postInstallCommands,
@@ -138,6 +159,10 @@ class Packager(object):
         try:
           # copy in source -- we must be in the source directory
           container.copySource("./")
+
+          # run the 'pre' commands in the container
+          preCmdFile = os.path.join(container.getSharedDir(), ".preCmds")
+          generateScript(preCmdFile, job.preCommands)
 
           recipe.prep(container)
           recipe.build(container)

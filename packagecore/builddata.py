@@ -8,8 +8,8 @@
 
 
 def generateMockData():
-  data = BuildData("mypackage", "1.2.3", 2, "centos7", ["make"], \
-      ["make install"], ["adduser -m test"], ["ls"])
+  data = BuildData("mypackage", "1.2.3", 2, "centos7", "", \
+      "./configure\nmake", "make install", "adduser -m test", "ls")
   data.license = "MIT"
   data.homepage = "www.test.com"
   data.summary = "A really important and good package"
@@ -23,8 +23,9 @@ def generateMockData():
 
 
 class BuildData(object):
-  def __init__(self, name, version, releaseNum, os, compileCommands, \
-      installCommands, postInstallCommands, testInstallCommands):
+  def __init__(self, name, version, releaseNum, os, preCommands, \
+      compileCommands, installCommands, postInstallCommands, \
+      testInstallCommands):
     # we only want lower-case package names.
     self.name = name.lower()
     self.version = version
@@ -36,6 +37,7 @@ class BuildData(object):
     self.os = os
     self.buildDeps = []
     self.runDeps = [] 
+    self.preCommands = preCommands
     self.compileCommands = compileCommands
     self.installCommands = installCommands
     self.postInstallCommands = postInstallCommands
@@ -55,11 +57,14 @@ class BuildData(object):
       os: %s
       buildDeps: %s
       runDeps: %s
+      preCommands: %s
       compileCommands: %s
       installCommands: %s
       postInstallCommands: %s
       testInstallCommands: %s
       """ % (self.name, self.version, self.releaseNum, self.maintainer, \
-        self.license, self.homepage, self.summary, self.os, self.buildDeps,
-        self.runDeps, self.compileCommands, self.installCommands,
-        self.postInstallCommands, self.testInstallCommands)
+        self.license, self.homepage, self.summary, self.os, self.buildDeps, \
+        self.runDeps, self.preCommands, self.compileCommands, \
+        self.installCommands, self.postInstallCommands, \
+        self.testInstallCommands)
+
