@@ -11,9 +11,12 @@ commands:
     - gcc test.c -o test 
   install:
     - install -D -m 644 test /var/tmp/
+  postinstall:
+    - touch /tmp/post${BP_UPGRADE}.txt
   testinstall:
     - file /var/tmp/test || exit 1
     - /var/tmp/test || exit 1
+    - file /tmp/postfalse.txt || exit 1
 packages:
   archlinux:
     builddeps:

@@ -115,12 +115,19 @@ class PkgBuild(object):
       if len(self._data.postInstallCommands) > 0:
         instFileName = "%s.install" % self._data.name
         pkgFile.write("install=%s\n" % instFileName)
+        # let users differentiate between post install and post upgrade
         generateScript(os.path.join(self._pkgBuildDir, instFileName),
           """
-          post_install() {
-          %s
-          }
-          """ % self._data.postInstallCommands)
+post_install() {
+BP_UPGRADE="false"
+%s
+}
+post_upgrade() {
+BP_UPGRADE="true"
+%s
+}
+          """ % (self._data.postInstallCommands, \
+          self._data.postInstallCommands))
       else:
         pkgFile.write("install=\n")
       pkgFile.write("changelog=\n")
