@@ -111,7 +111,7 @@ class DockerContainer(object):
     # hack to keep the container running
     self._proc = Popen(["docker", "run", "--name", self._name, "-v", \
         "%s:%s" % (self.getSharedDir(), self.getSharedDir()), \
-        self._image, "tail", "-f", "/dev/null"])
+        self._image, "tail", "-f", "/dev/null"], stdout=PIPE, stderr=PIPE)
 
     # wait for our container to start
     running = False
@@ -128,6 +128,10 @@ class DockerContainer(object):
         self._proc.kill()
         break
     if not running:
+      stdout, stderr = self._proc.communicate()
+      # flush stdout and stderr
+      print(stdout)
+      print(stderr)
       # try to cleanup a bit before we exit
       self.stop()
       raise DockerError("Container failed to start: %s" % self._name)
