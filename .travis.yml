@@ -11,6 +11,7 @@ script:
   - python3 -m pip install --upgrade --force-reinstall "dist/packagecore-$(cat VERSION).tar.gz"
   - pushd test; packagecore 1.2.3 4 || exit 1; popd
 before_deploy:
+  - pushd test; packagecore -c packagecore-tag.yaml 1.2.3 5 || exit 1; popd
   - packagecore "${TRAVIS_TAG#v}"
 deploy:
   provider: releases
