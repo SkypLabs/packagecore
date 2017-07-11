@@ -40,6 +40,14 @@ DATA = {
     "packageType": "rpm-yum",
     "formatString": "%s-%s-%d.el7.centos.x86_64.rpm"
   },
+  "debian9": {
+    "dockerImage": "debian:stretch",
+    "packageType": "debian",
+  },
+  "debian8": {
+    "dockerImage": "debian:jessie",
+    "packageType": "debian",
+  },
   "fedora22": {
     "dockerImage": "fedora:22",
     "packageType": "rpm",
