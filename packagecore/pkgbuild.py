@@ -120,7 +120,7 @@ class PkgBuild(object):
           post_install() {
           %s
           }
-          """ % "\n".join(self._data.postInstallCommands))
+          """ % self._data.postInstallCommands)
       else:
         pkgFile.write("install=\n")
       pkgFile.write("changelog=\n")
@@ -131,7 +131,7 @@ class PkgBuild(object):
       pkgFile.write("build() {\n")
       buildEnv.write(pkgFile)
       pkgFile.write("cd %s\n" % container.getSourceDir())
-      pkgFile.write("\n".join(self._data.compileCommands))
+      pkgFile.write(self._data.compileCommands)
       pkgFile.write("\n")
       pkgFile.write("}\n")
       pkgFile.write("\n")
@@ -150,7 +150,7 @@ class PkgBuild(object):
             (dest, link))
 
       pkgFile.write("cd %s\n" % container.getSourceDir())
-      pkgFile.write("\n".join(self._data.installCommands))
+      pkgFile.write(self._data.installCommands)
       pkgFile.write("\n")
 
       # remove symlinks

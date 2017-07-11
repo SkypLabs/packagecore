@@ -122,18 +122,17 @@ cp "${OUTRPM}" "${RPM}"
       specFile.write("%build\n")
       buildEnv.write(specFile)
       specFile.write("cd \"%s\"\n" % container.getSourceDir())
-      specFile.write("\n".join(self._data.compileCommands))
+      specFile.write(self._data.compileCommands)
       specFile.write("\n")
       specFile.write("%install\n")
       buildEnv.write(specFile)
       specFile.write("cd \"%s\"\n" % container.getSourceDir())
-      # replace is deprecated -- will use env variables
-      specFile.write("\n".join(self._data.installCommands))
+      specFile.write(self._data.installCommands)
       specFile.write("\n")
 
       if len(self._data.postInstallCommands) > 0:
         specFile.write("%post\n")
-        specFile.write("\n".join(self._data.postInstallCommands))
+        specFile.write(self._data.postInstallCommands)
         specFile.write("\n")
 
       specFile.write("%files\n")
