@@ -1,9 +1,9 @@
 PackageCore
 ===========
 
-<img src="https://travis-ci.org/BytePackager/packagecore.svg?branch=master"/>
-
-<img src="https://circleci.com/gh/BytePackager/packagecore/tree/master.svg?style=svg"/>
+![pypi version](https://badge.fury.io/py/packagecore.svg)
+![travis ci status](https://travis-ci.org/BytePackager/packagecore.svg?branch=master)
+![circle ci status](https://circleci.com/gh/BytePackager/packagecore/tree/master.svg?style=svg)
 
 Python 3 library for building Linux packages. Works in [Travis-CI](#travis-ci-usage) and [Circle-CI](#circle-ci-usage).
 
