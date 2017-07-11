@@ -10,7 +10,6 @@ script:
   - ./setup.py sdist
   - python3 -m pip install --upgrade --force-reinstall "dist/packagecore-$(cat VERSION).tar.gz"
   - pushd test; packagecore 1.2.3 4 || exit 1; popd
-  - export VERSION_TAG="v$(cat VERSION)"; if [[ "${TRAVIS_BRANCH}" == "master" ]] && ! git describe "${VERSION_TAG}"; then git config --global user.email = "info@bytepackager.com"; git config --global user.name "travis-ci"; git tag -am "${VERSION_TAG}" "${VERSION_TAG}" && git push origin "${VERSION_TAG}"; fi
 before_deploy:
   - packagecore "${TRAVIS_TAG#v}"
 deploy:
