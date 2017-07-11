@@ -132,6 +132,13 @@ cp "${OUTRPM}" "${RPM}"
 
       if len(self._data.postInstallCommands) > 0:
         specFile.write("%post\n")
+        specFile.write("""
+if [[ "${1}" == "1" ]]; then
+  BP_UPGRADE="false"
+else
+  BP_UPGRADE="true"
+fi
+        """)
         specFile.write(self._data.postInstallCommands)
         specFile.write("\n")
 

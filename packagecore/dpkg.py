@@ -87,7 +87,15 @@ class DebianPackage(object):
     # create post install script
     if len(self._data.postInstallCommands) > 0:
       generateScript(postFilePath, \
-          self._data.postInstallCommands)
+          """
+if [[ -z "${2}" ]]; then
+  BP_UPGRADE="false"
+else
+  BP_UPGRADE="true"
+fi
+
+%s
+          """ % self._data.postInstallCommands)
 
 
   ##
