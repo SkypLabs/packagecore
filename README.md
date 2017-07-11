@@ -22,7 +22,8 @@ for building and testing packages.
 Installation
 ------------
 
-The easiest way to get PackageCore is via `pip`.
+The easiest way to get PackageCore is via `pip` (after installing Docker and
+your distro's `libyaml` package).
 
 ```
 pip3 install packagecore
@@ -135,7 +136,7 @@ To use in `travis-ci`, you must be using at least Ubuntu 14.04 (Trusty) with
 ```
 before_deploy:
   - sudo apt-get update -qy
-  - sudo apt-get install -qy python3 python3-pip
+  - sudo apt-get install -qy python3 python3-pip libyaml-dev
   - python3 -m pip install packagecore
   - packagecore -o dist "${TRAVIS_TAG#v}"
 ```
@@ -170,7 +171,7 @@ deployment:
   package:
     tag: /^v.*$/
     commands:
-      - sudo apt-get install python3 python3-pip 
+      - sudo apt-get install python3 python3-pip libyaml-dev
       - sudo python3 -m pip install packagecore
       - packagecore -o "${CIRCLE_ARTIFACTS}" "${CIRCLE_TAG}"
 ```
