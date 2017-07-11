@@ -5,8 +5,8 @@ PackageCore
 
 <img src="https://circleci.com/gh/BytePackager/packagecore/tree/master.svg?style=svg"/>
 
-Python library for building Linux packages. It is distributed under the GPLv2
-license.
+Python 3 library for building Linux packages. Works in [Travis-CI](#travis-ci-usage) and [Circle-CI](#circle-ci-usage).
+
 
 
 Requirements
@@ -25,7 +25,7 @@ Installation
 The easiest way to get PackageCore is via `pip`.
 
 ```
-pip install packagecore
+pip3 install packagecore
 ```
 
 Alternatively, Linux packages are provided on our release page or you can
@@ -34,6 +34,7 @@ install in manually from this repo using the `setup.py` module.
 ```
 ./setup.py install
 ```
+
 
 
 Execution
@@ -49,6 +50,11 @@ In your source directory if `packagecore.yaml` contains the configuration.
 Otherwise, the configuration file can be explicitly specified:
 ```
 packagecore -c myfile.yaml <version> [<release num>]
+```
+
+Use the `-h` flag to get a full list of options:
+```
+packagecore -h
 ```
 
 
@@ -120,8 +126,8 @@ override the top-level commands inside of the package listing:
 ```
 
 
-Usage in Travis-CI
-------------------
+<a name="travis-ci-usage"></a> Usage in Travis-CI
+-------------------------------------------------
 
 To use in `travis-ci`, you must be using at least Ubuntu 14.04 (Trusty) with
 `sudo`. Then, add the following `before_deploy` commands:
@@ -150,8 +156,8 @@ deploy:
 Assuming you name your tags `v1.2.3`
 
 
-Usage in Circle-CI
-------------------
+<a name="circle-ci-usage"></a>Usage in Circle-CI
+------------------------------------------------
 
 To use in `circle-ci`, add the following to your configuration.
 
