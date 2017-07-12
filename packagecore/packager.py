@@ -146,6 +146,8 @@ class Packager(object):
       else:
         raise UnknownPackageTypeError("Unknown packaging type: %s" % pkgType) 
 
+      # remove package if it exists
+      outfile = os.path.join(self._outputDir, recipe.getName())
       try:
         print("Building package for %s: %s" % (job.os, str(job)))
         tmpfile = os.path.join("/tmp", recipe.getName())
@@ -184,7 +186,7 @@ class Packager(object):
           container.stop()
 
         # move the package to the current directory
-        shutil.move(tmpfile, self._outputDir)
+        shutil.move(tmpfile, outfile)
       except:
         print("Failed to build package for '%s'." % job.os)
         print(traceback.format_exc())
