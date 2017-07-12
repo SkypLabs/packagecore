@@ -52,15 +52,15 @@ class Packager(object):
       os.makedirs(self._outputDir)
 
     # set globals
-    projectPreCommands = ""
+    projectPreCompileCommands = ""
     projectCompileCommands = ""
     projectInstallCommands = "" 
     projectPostInstallCommands = ""
     projectTestInstallCommands = ""
     if "commands" in conf:
       commands = conf["commands"]
-      if "pre" in commands:
-        projectPreCommands = _stringifyCommands(commands["pre"])
+      if "precompile" in commands:
+        projectPreCompileCommands = _stringifyCommands(commands["precompile"])
       if "compile" in commands:
         projectCompileCommands = _stringifyCommands(commands["compile"])
       if "install" in commands:
@@ -75,15 +75,16 @@ class Packager(object):
     # parse packages 
     for osName, data in conf["packages"].items():
       # set package specific commnds
-      preCommands = projectPreCommands
+      preCompileCommands = projectPreCompileCommands
       compileCommands = projectCompileCommands 
       installCommands = projectInstallCommands 
       postInstallCommands = projectPostInstallCommands 
       testInstallCommands = projectTestInstallCommands 
       if not data is None and "commands" in data:
         commands = data["commands"]
-        if "pre" in commands:
-          projectPreCommands = _stringifyCommands(commands["pre"])
+        if "precompile" in commands:
+          projectPreCompileCommands = \
+              _stringifyCommands(commands["precompile"])
         if "compile" in commands:
           compileCommands = _stringifyCommands(commands["compile"])
         if "install" in commands:
@@ -99,7 +100,7 @@ class Packager(object):
         version=version,
         releaseNum=release,
         os=osName,
-        preCommands=preCommands,
+        preCompileCommands=preCompileCommands,
         compileCommands=compileCommands,
         installCommands=installCommands,
         postInstallCommands=postInstallCommands,
@@ -164,7 +165,7 @@ class Packager(object):
 
           # run the 'pre' commands in the container
           preCmdFile = os.path.join(container.getSharedDir(), ".preCmds")
-          generateScript(preCmdFile, job.preCommands)
+          generateScript(preCmdFile, job.preCompileCommands)
 
           recipe.prep(container)
           recipe.build(container)

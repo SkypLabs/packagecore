@@ -23,7 +23,7 @@ def generateMockData():
 
 
 class BuildData(object):
-  def __init__(self, name, version, releaseNum, os, preCommands, \
+  def __init__(self, name, version, releaseNum, os, preCompileCommands, \
       compileCommands, installCommands, postInstallCommands, \
       testInstallCommands):
     # we only want lower-case package names.
@@ -37,7 +37,7 @@ class BuildData(object):
     self.os = os
     self.buildDeps = []
     self.runDeps = [] 
-    self.preCommands = preCommands
+    self.preCompileCommands = preCompileCommands
     self.compileCommands = compileCommands
     self.installCommands = installCommands
     self.postInstallCommands = postInstallCommands
@@ -57,14 +57,14 @@ class BuildData(object):
       os: %s
       buildDeps: %s
       runDeps: %s
-      preCommands: %s
+      preCompileCommands: %s
       compileCommands: %s
       installCommands: %s
       postInstallCommands: %s
       testInstallCommands: %s
       """ % (self.name, self.version, self.releaseNum, self.maintainer, \
         self.license, self.homepage, self.summary, self.os, self.buildDeps, \
-        self.runDeps, self.preCommands, self.compileCommands, \
+        self.runDeps, self.preCompileCommands, self.compileCommands, \
         self.installCommands, self.postInstallCommands, \
         self.testInstallCommands)
 
