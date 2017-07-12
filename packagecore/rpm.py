@@ -11,6 +11,7 @@ import shutil
 import os
 import os.path
 import re
+import platform
 
 from .buildvariables import BuildVariables
 from .scriptfile import generateScript 
@@ -29,11 +30,11 @@ class RPM(object):
   # @brief Create a new rpm object.
   #
   # @param data Information about the package to build.
+  # @param useYum Use yum instead of dnf to install packages.
   #
   # @return The new object.
-  def __init__(self, data, formatStr, useYum=False):
+  def __init__(self, data, useYum=False):
     self._data = data
-    self._formatStr = formatStr
     self._sanitizedVersion = sanitize(data.version)
     self._specFile = None
     self._useYum = useYum
@@ -220,7 +221,19 @@ fi
   #
   # @return The full package name.
   def getName(self):
-    return self._formatStr % (self._data.name, self._sanitizedVersion,
+    return "%s-%s-%d.rpm" % (self._data.name, self._sanitizedVersion,
         self._data.releaseNum)
 
+
+  ##
+  # @brief Get the architecture field for the package name. 
+  #
+  # @return The architecture name (e.g., x86_64).
+  def getArch(self):
+    bits, fmt = platform.architecture()
+    # TODO: need to work with arm
+    if bits == "64bit":
+      return "x86_64"
+    else:
+      return "i686"
 

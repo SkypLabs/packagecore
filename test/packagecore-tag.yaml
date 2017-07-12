@@ -24,6 +24,9 @@ packages:
     commands:
       pre:
         - yum install epel-release
+  debian9:
+    builddeps:
+      - gcc
   fedora25:
     builddeps:
       - gcc

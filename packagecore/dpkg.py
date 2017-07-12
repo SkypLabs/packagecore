@@ -11,6 +11,7 @@ import shutil
 import os
 import os.path
 import re
+import platform
 
 from .buildvariables import BuildVariables
 from .scriptfile import generateScript
@@ -193,4 +194,15 @@ fi
     return "%s_%s-%d_amd64.deb" % (self._data.name, self._sanitizedVersion,
         self._data.releaseNum)
 
- 
+  ##
+  # @brief Get the architecture field for the package name. 
+  #
+  # @return The architecture name (e.g., x86_64).
+  def getArch(self):
+    bits, fmt = platform.architecture()
+    # TODO: need to work with arm
+    if bits == "64bit":
+      return "amd64"
+    else:
+      return "i386"
+

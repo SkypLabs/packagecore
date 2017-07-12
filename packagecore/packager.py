@@ -135,20 +135,23 @@ class Packager(object):
       success = False
     for job in self._queue:
       build = BUILDS[job.os]
+      nameFormat = build["formatString"]
       pkgType = build["packageType"]
       if pkgType == "pkgbuild":
         recipe = PkgBuild(job)
       elif pkgType == "debian":
         recipe = DebianPackage(job)
       elif pkgType == "rpm":
-        recipe = RPM(job, build["formatString"], useYum=False)
+        recipe = RPM(job, useYum=False)
       elif pkgType == "rpm-yum":
-        recipe = RPM(job, build["formatString"], useYum=True)
+        recipe = RPM(job, useYum=True)
       else:
         raise UnknownPackageTypeError("Unknown packaging type: %s" % pkgType) 
 
       # remove package if it exists
-      outfile = os.path.join(self._outputDir, recipe.getName())
+      outfile = os.path.join(self._outputDir, \
+          nameFormat.format(name=job.name, version=job.version,
+          release=job.releaseNum, arch=recipe.getArch()))
       try:
         print("Building package for %s: %s" % (job.os, str(job)))
         tmpfile = os.path.join("/tmp", recipe.getName())
