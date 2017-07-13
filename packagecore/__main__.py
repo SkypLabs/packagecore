@@ -9,6 +9,7 @@
 
 
 import sys
+import os
 import optparse
 
 
@@ -32,10 +33,17 @@ def main():
   usage = "usage: %prog [options] <version> [<release number>]"
   parser = optparse.OptionParser(usage=usage)
 
+  # we set the default to None here, so we can check if it has been, otherwise
+  # we'll just assume they're looking for the default in the -C option
   parser.add_option("-c", "--config", dest="configfile", \
       metavar="<yaml file>", \
-      default=configFilename, help="The path to the yaml configuration " \
-      "file. Defaults to %default.")
+      default=None, help="The path to the yaml configuration " \
+      "file. Defaults to %s." % configFilename)
+
+  parser.add_option("-C", "--src", dest="sourceDir", \
+      metavar="<source dir>", \
+      default="./", help="The source directory to build. " \
+      "Defaults to '%default'.")
 
   parser.add_option("-o", "--outputdir", dest="outputdir", \
       metavar="<output directory>", default=outputdir, \
@@ -48,6 +56,9 @@ def main():
       "distributions to use as targets in the 'packages' section.")
 
   (options, args) = parser.parse_args()
+
+  if options.configfile is None:
+    options.configfile = os.path.join(options.sourceDir, configFilename)
 
   if not options.showdistributions is None:
     showDistributions()
@@ -67,11 +78,12 @@ def main():
       release=int(args[1])
     print("Building version '%s' release '%d'." % (version, release))
 
+    # if we're using the default configFilename assume we mean in the source
+    # directory
     conf = YAMLConfigFile(options.configfile)
-    print("Parse '%s' configuration." % configFilename)
 
-    p = Packager(conf=conf.getData(), outputDir=options.outputdir, \
-        version=version, release=release)
+    p = Packager(conf=conf.getData(), srcDir=options.sourceDir, \
+        outputDir=options.outputdir, version=version, release=release)
     if p.run():
       return 0
     else:
