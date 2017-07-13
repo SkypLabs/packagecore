@@ -114,8 +114,7 @@ cp "${OUTRPM}" "${RPM}"
           self._data.homepage != "":
         specFile.write("URL: %s\n" % self._data.homepage)
       specFile.write("\n")
-      specFile.write("%define _build_name_fmt " \
-          "%%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm\n")
+      specFile.write("%%define _build_name_fmt %s\n" % self.getName())
       specFile.write("%%define _rpmdir %s\n" % container.getSharedDir())
       specFile.write("\n")
       specFile.write("%description\n")

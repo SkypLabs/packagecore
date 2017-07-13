@@ -13,7 +13,7 @@ DATA = {
   "archlinux": {
     "dockerImage": "packagecore/archlinux:latest",
     "packageType": "pkgbuild",
-    "formatString": "{name}-{version}-{release}-{arch}.tar.xz"
+    "formatString": "{name}-{version}-{release}-{arch}.pkg.tar.xz"
   },
   "centos6.9": {
     "dockerImage": "centos:6.9",
