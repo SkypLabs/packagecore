@@ -40,13 +40,15 @@ class Packager(object):
   #
   # @param conf The configuration to use.
   # @param outputDir The directory to output packages into.
+  # @param srcDir The directory containing the projects source.
   # @param version The version of packages to generate.
   # @param release The release number.
   #
   # @return The new Packager.
-  def __init__(self, conf, outputDir, version, release):
+  def __init__(self, conf, srcDir, outputDir, version, release):
     self._queue = []
     self._outputDir = outputDir
+    self._srcDir = srcDir
 
     if not os.path.exists(self._outputDir):
       os.makedirs(self._outputDir)
@@ -164,7 +166,7 @@ class Packager(object):
 
         try:
           # copy in source -- we must be in the source directory
-          container.copySource("./")
+          container.copySource(self._srcDir)
 
           # run the 'pre' commands in the container
           preCmdFile = os.path.join(container.getSharedDir(), ".preCmds")
