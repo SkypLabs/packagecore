@@ -5,7 +5,7 @@ metadata:
   summary: Utility for generating Linux packages.
   homepage: https://bytepackager.com
 commands:
-  precompile:
+  pre:
     - uname -a
   compile:
     - gcc test.c -o test 
@@ -14,17 +14,27 @@ commands:
   testinstall:
     - file /var/tmp/test || exit 1
     - /var/tmp/test || exit 1
-    - file /tmp/postfalse.txt || exit 1
 packages:
-  ubuntu16.04:
-    commands:
-      precompile: |
-        apt-get install epel-release
-      postinstall: |
-        touch /tmp/post${BP_UPGRADE}.txt
+  archlinux:
     builddeps:
       - gcc
-    deps:
-      - curl
+  centos7.3:
+    builddeps:
+      - gcc
+    commands:
+      pre:
+        - yum install epel-release
+  debian9:
+    builddeps:
+      - gcc
+  fedora25:
+    builddeps:
+      - gcc
+  ubuntu16.04:
+    builddeps:
+      - gcc
+  ubuntu17.10:
+    builddeps:
+      - gcc
     
     
