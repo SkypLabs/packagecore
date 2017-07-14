@@ -9,8 +9,8 @@ script:
   - ./setup.py test
   - ./setup.py sdist
   - python3 -m pip install --upgrade --force-reinstall "dist/packagecore-$(cat VERSION).tar.gz"
-  - pushd test; packagecore 1.2.3 4 || exit 1; popd
-  - if [[ "${TRAVIS_TAG}" == "v${TRAVIS_TAG#v}" ]]; then pushd test; packagecore -c packagecore-tag.yaml 1.2.3 5 || exit 1; popd; fi
+  - packagecore -C test -p ubuntu16.04 1.2.3 4 || exit 1
+  - if [[ "${TRAVIS_TAG}" == "v${TRAVIS_TAG#v}" ]]; then packagecore -C test 1.2.3 5 || exit 1; fi
 before_deploy:
   - packagecore "${TRAVIS_TAG#v}"
 deploy:
