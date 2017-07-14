@@ -47,7 +47,7 @@ def main():
 
   parser.add_option("-p", "--package", dest="distribution", \
       metavar="<distribution name>", default=None, \
-      help="Instead of building all packages in a configuration file, but "
+      help="Instead of building all packages in a configuration file, build "
       "a package for a specific distribution.")
 
   parser.add_option("-o", "--outputdir", dest="outputdir", \
