@@ -45,6 +45,11 @@ def main():
       default="./", help="The source directory to build. " \
       "Defaults to '%default'.")
 
+  parser.add_option("-p", "--package", dest="distribution", \
+      metavar="<distribution name>", default=None, \
+      help="Instead of building all packages in a configuration file, but "
+      "a package for a specific distribution.")
+
   parser.add_option("-o", "--outputdir", dest="outputdir", \
       metavar="<output directory>", default=outputdir, \
       help="The directory to " \
@@ -83,7 +88,8 @@ def main():
     conf = YAMLConfigFile(options.configfile)
 
     p = Packager(conf=conf.getData(), srcDir=options.sourceDir, \
-        outputDir=options.outputdir, version=version, release=release)
+        outputDir=options.outputdir, version=version, release=release, \
+        distribution=options.distribution)
     if p.run():
       return 0
     else:

@@ -23,6 +23,10 @@ class UnknownPackageTypeError(Exception):
   pass
 
 
+class PackageNotFoundError(Exception):
+  pass
+
+
 def _stringifyCommands(cmds):
   if isinstance(cmds, list):
     cmds = "\n".join(cmds)
@@ -43,9 +47,11 @@ class Packager(object):
   # @param srcDir The directory containing the projects source.
   # @param version The version of packages to generate.
   # @param release The release number.
+  # @param distribution The distribution to build a package for.
   #
   # @return The new Packager.
-  def __init__(self, conf, srcDir, outputDir, version, release):
+  def __init__(self, conf, srcDir, outputDir, version, release,
+      distribution=None):
     self._queue = []
     self._outputDir = outputDir
     self._srcDir = srcDir
@@ -74,8 +80,19 @@ class Packager(object):
         projectTestInstallCommands = \
             _stringifyCommands(commands["testInstall"])
 
+    # make sure if we're building a specific distribution it exists in this
+    # configuration.
+    if not distribution is None and not distribution in conf["packages"]:
+      raise PackageNotFoundError("No '%s' listed in configuration." % \
+          distribution)
+
     # parse packages 
     for osName, data in conf["packages"].items():
+      if not distribution is None and osName != distribution:
+        # skip this package
+        print("Skipping '%s'." % osName)
+        continue
+
       # set package specific commnds
       preCompileCommands = projectPreCompileCommands
       compileCommands = projectCompileCommands 
