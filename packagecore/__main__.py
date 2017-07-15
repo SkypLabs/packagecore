@@ -17,16 +17,20 @@ from .packager import Packager
 from .distributions import DATA
 
 
+BIN_NAME="packagecore"
+
+
 def showDistributions():
   print("Available distributions to use as targets in the 'packages' section:")
   for distname, data in DATA.items():
     print("\t%s" % distname)
 
 
-def showVersion():
+def getVersion():
   import pkg_resources
   versionBytes = pkg_resources.resource_string(__name__, "VERSION")
   version = versionBytes.decode("utf8").strip()
+  return version
   print(version)
 
 
@@ -35,6 +39,8 @@ def main():
   release=1
   configFilename="packagecore.yaml"
   outputdir="./"
+
+  packageCoreVersion = getVersion()
 
   usage = "usage: %prog [options] <version> [<release number>]"
   parser = optparse.OptionParser(usage=usage)
@@ -78,7 +84,7 @@ def main():
     showDistributions()
     return 0
   elif not options.showversion is None:
-    showVersion()
+    print("%s %s" % (BIN_NAME, packageCoreVersion))
     return 0
   else:
     if len(args) == 0:
@@ -93,6 +99,7 @@ def main():
     version=args[0]
     if len(args) == 2:
       release=int(args[1])
+    print("Building with %s %s." % (BIN_NAME, packageCoreVersion))
     print("Building version '%s' release '%d'." % (version, release))
 
     # if we're using the default configFilename assume we mean in the source
