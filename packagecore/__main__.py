@@ -12,7 +12,6 @@ import sys
 import os
 import optparse
 
-
 from .configfile import YAMLConfigFile
 from .packager import Packager
 from .distributions import DATA
@@ -22,6 +21,14 @@ def showDistributions():
   print("Available distributions to use as targets in the 'packages' section:")
   for distname, data in DATA.items():
     print("\t%s" % distname)
+
+
+def showVersion():
+  import pkg_resources
+  verFile = pkg_resources.resource_string(__name__, "VERSION")
+  with open(verFile, "r") as fin:
+    version = str(fin.read().strip())
+  print(version)
 
 
 def main():
@@ -60,6 +67,9 @@ def main():
       dest="showdistributions", help="Show a list of available Linux " \
       "distributions to use as targets in the 'packages' section.")
 
+  parser.add_option("-v", "--version", action="store_true", \
+      dest="showversion", help="Display the current version.")
+
   (options, args) = parser.parse_args()
 
   if options.configfile is None:
@@ -67,6 +77,9 @@ def main():
 
   if not options.showdistributions is None:
     showDistributions()
+    return 0
+  elif not options.showversion is None:
+    showVersion()
     return 0
   else:
     if len(args) == 0:
