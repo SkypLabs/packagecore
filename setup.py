@@ -20,6 +20,7 @@ setup(
   packages=find_packages(),
   test_suite="packagecore",
   include_package_data=True,
+  package_data={"": "packagecore/VERSION"},
   entry_points={
     "console_scripts": [
       "packagecore = packagecore.__main__:main"
