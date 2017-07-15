@@ -1,1 +1,2 @@
-include VERSION
+exclude VERSION
+include packagecore/VERSION
