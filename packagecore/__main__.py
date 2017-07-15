@@ -25,9 +25,8 @@ def showDistributions():
 
 def showVersion():
   import pkg_resources
-  verFile = pkg_resources.resource_string(__name__, "VERSION")
-  with open(verFile, "r") as fin:
-    version = str(fin.read().strip())
+  versionBytes = pkg_resources.resource_string(__name__, "VERSION")
+  version = versionBytes.decode("utf8").strip()
   print(version)
 
 
