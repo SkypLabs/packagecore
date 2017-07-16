@@ -1,10 +1,18 @@
+# python files
 __pycache__
 *.pyo
 *.pyc
+
+# vim files
 *.swp
+
+# packages
 *.deb
 *.rpm
 *.pkg.tar.xz
+
+# mkdocs
+site
 
 # setup.py stuff
 dist
