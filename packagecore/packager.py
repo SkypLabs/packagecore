@@ -10,13 +10,13 @@ import shutil
 import os
 import traceback
 
-from .builddata import BuildData
 from .docker import Docker
 from .pkgbuild import PkgBuild
 from .dpkg import DebianPackage
 from .rpm import RPM
 from .distributions import DATA as BUILDS
 from .scriptfile import generateScript 
+from .configparser import ConfigParser
 
 
 class UnknownPackageTypeError(Exception):
@@ -25,17 +25,6 @@ class UnknownPackageTypeError(Exception):
 
 class PackageNotFoundError(Exception):
   pass
-
-
-def _stringifyCommands(cmds):
-  if isinstance(cmds, list):
-    cmds = "\n".join(cmds)
-  elif isinstance(cmds, str):
-    pass
-  else:
-    raise TypeError("Expected commands to be a string or list. Not '%s'." % \
-        type(cmds))
-  return cmds
 
 
 class Packager(object):
@@ -52,96 +41,30 @@ class Packager(object):
   # @return The new Packager.
   def __init__(self, conf, srcDir, outputDir, version, release,
       distribution=None):
-    self._queue = []
     self._outputDir = outputDir
     self._srcDir = srcDir
 
     if not os.path.exists(self._outputDir):
       os.makedirs(self._outputDir)
 
-    # set globals
-    projectPreCompileCommands = ""
-    projectCompileCommands = ""
-    projectInstallCommands = "" 
-    projectPostInstallCommands = ""
-    projectTestInstallCommands = ""
-    if "commands" in conf:
-      commands = conf["commands"]
-      if "precompile" in commands:
-        projectPreCompileCommands = _stringifyCommands(commands["precompile"])
-      if "compile" in commands:
-        projectCompileCommands = _stringifyCommands(commands["compile"])
-      if "install" in commands:
-        projectInstallCommands = _stringifyCommands(commands["install"])
-      if "postinstall" in commands:
-        projectPostInstallCommands = \
-            _stringifyCommands(commands["postinstall"])
-      if "testinstall" in commands:
-        projectTestInstallCommands = \
-            _stringifyCommands(commands["testinstall"])
-
-    # make sure if we're building a specific distribution it exists in this
-    # configuration.
-    if not distribution is None and not distribution in conf["packages"]:
-      raise PackageNotFoundError("No '%s' listed in configuration." % \
-          distribution)
-
-    # parse packages 
-    for osName, data in conf["packages"].items():
-      if not distribution is None and osName != distribution:
-        # skip this package
-        print("Skipping '%s'." % osName)
-        continue
-
-      # set package specific commnds
-      preCompileCommands = projectPreCompileCommands
-      compileCommands = projectCompileCommands 
-      installCommands = projectInstallCommands 
-      postInstallCommands = projectPostInstallCommands 
-      testInstallCommands = projectTestInstallCommands 
-      if not data is None and "commands" in data:
-        commands = data["commands"]
-        if "precompile" in commands:
-          projectPreCompileCommands = \
-              _stringifyCommands(commands["precompile"])
-        if "compile" in commands:
-          compileCommands = _stringifyCommands(commands["compile"])
-        if "install" in commands:
-          installCommands = _stringifyCommands(commands["install"])
-        if "postinstall" in commands:
-          postInstallCommands = _stringifyCommands(commands["postinstall"])
-        if "testinstall" in commands:
-          testInstallCommands = _stringifyCommands(commands["testinstall"])
-
-      # construct it with the required fields
-      b = BuildData(
-        name=conf["name"],
-        version=version,
-        releaseNum=release,
-        os=osName,
-        preCompileCommands=preCompileCommands,
-        compileCommands=compileCommands,
-        installCommands=installCommands,
-        postInstallCommands=postInstallCommands,
-        testInstallCommands=testInstallCommands)
-
-      # set metadata fields
-      if "maintainer" in conf:
-        b.maintainer = conf["maintainer"]
-      if "license" in conf:
-        b.license = conf["license"]
-      if "homepage" in conf:
-        b.homepage = conf["homepage"]
-      if "summary" in conf:
-        b.summary = conf["summary"]
-
-      # set dependencies 
-      if "builddeps" in data:
-        b.buildDeps = data["builddeps"]
-      if "deps" in data:
-        b.runDeps = data["deps"]
-
-      self._queue.append(b)
+    parser = ConfigParser()
+    builds = parser.parse(conf, release, version)
+    
+    if not distribution is None:
+      soloBuild = None
+      for b in builds:
+        if b.osName == distribution:
+          soloBuild = b
+          break
+        else:
+          # skip this package
+          print("Skipping '%s'." % b.osName)
+      if soloBuild is None:
+        raise PackageNotFoundError("No '%s' listed in configuration." % \
+            distribution)
+      self._queue = [soloBuild]
+    else:
+      self._queue = builds
 
 
   ##
