@@ -14,29 +14,29 @@ The Fields
     The name of the package to create. For most distributions this will be
     converted to all lower case.
 
-* `metadata` (composite, optional):
+* `maintainer` (string, optional):
 
-    While specifying your package's metadata is optional, failing to do so will
-    cause package management system to produce warnings.  
+    The name and email address of the package maintainer (e.g.,
+    `John Doe <john@doe.org>`). Failing to specify this field will generate
+    warnings in most package managers.
 
-    - `maintainer` (string, optional):
+* `license` (string, optional):
+    
+    The name of the license the software included in the package is
+    distributed under (e.g., `GPL2`, `MIT`, `Apache 2.0`).  Use `Custom`
+    for proprietary and non-standard licenses. Failing to specify this field
+    will generate warnings in most package managers.
 
-        The name and email address of the package maintainer (e.g., `John Doe
-        <john@doe.org>`).
+* `summary` (string, optional):
 
-    - `license` (string, optional):
-        
-        The name of the license the software included in the package is
-        distributed under (e.g., `GPL2`, `MIT`, `Apache 2.0`).  Use `Custom`
-        for proprietary and non-standard licenses.
+    A short description of the package. Failing to specify this field
+    will generate warnings in most package managers.
 
-    - `summary` (string, optional):
 
-        A short description of the package.
+* `homepage` (string, optional):
 
-    - `homepage` (string, optional):
+    The home URL of the package.
 
-        The home URL of the package.
 
 * `commands` (composite, required):
 
@@ -47,14 +47,15 @@ The Fields
 
     - `precompile` (string, optional):
 
-    The commands to execute inside of the container before installing build
-    dependencies. Most projects will not require `precompile` commands.
+        The commands to execute inside of the container before installing build
+        dependencies. Most projects will not require `precompile` commands.
 
     - `compile` (string, optional):
 
         The commands to execute in order to build the program. These are executed
         after the build dependencies are installed. For many projects `copmile`
         commands will be:
+
         ```
         compile: |
           ./configure --prefix=/usr && make
@@ -67,9 +68,28 @@ The Fields
         be installed in the root directory specified by the `${BP_DESTDIR}`
         environment variable. For many projects, the `install` command will simply
         be:
+
         ```
         install: |
           make install DESTDIR="${BP_DESTDIR}"
+        ```
+
+    - `postinstall` (string, optional):
+
+        The commands the package should execute after it installs on a system.
+        Most packages will not need to specify this field. Packages which need
+        to add users should do so here. 
+
+        The environment variable
+        `${BP_UPGRADE}` is set to `"true"` when the package is being upgraded
+        (replacing a previous version), and set to `"false"` when it is a fresh
+        installation.
+
+        If your package needs to add the user `specialuser` to the system with
+        the `uid` `1234`:
+
+        ```
+        [ "${BP_UPGRADE}" == "true" ] || useradd -m "newuser" -u 1234
         ```
 
     - `testinstall` (string, optional):
@@ -78,11 +98,14 @@ The Fields
         commands will be executed after the built package has been installed inside
         of a fresh container. You can check to make sure files got installed in the
         correct locations:
+
         ```
           testinstall: |
             ls /usr/bin/myprog
         ```
+
         or can execute your program to ensure linking has been done correctly:
+
         ```
           testinstall: |
             /usr/bin/myprog --version
