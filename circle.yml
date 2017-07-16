@@ -10,5 +10,5 @@ test:
     - ./setup.py test
     - ./setup.py sdist
     - python3 -m pip install -vv --upgrade --force-reinstall "dist/packagecore-$(cat VERSION).tar.gz"
-    - pushd test; packagecore 1.2.3 4 || exit 1; popd
+    - packagecore -C test -p ubuntu16.04 1.2.3 4 || exit 1
     - python3 -m pip uninstall packagecore
