@@ -66,11 +66,10 @@ PackageCore uses YAML files for configuration. The basic structure is:
 
 ```
 name: wx-calc
-metadata:
-  maintainer: Dominique LaSalle <dominique@bytepackager.com>
-  license: GPL3
-  summary: A simple calculator using wxWidgets.
-  homepage: https://solidlake.com
+maintainer: Dominique LaSalle <dominique@bytepackager.com>
+license: GPL3
+summary: A simple calculator using wxWidgets.
+homepage: https://solidlake.com
 commands:
   compile:
     - mkdir build
