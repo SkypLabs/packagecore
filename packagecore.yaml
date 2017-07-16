@@ -1,9 +1,8 @@
 name: packagecore
-metadata:
-  maintainer: dominique@bytepackager.com
-  license: GPL2
-  summary: Utility for generating Linux packages.
-  homepage: https://github.com/bytepackager/packagecore
+maintainer: dominique@bytepackager.com
+license: GPL2
+summary: Utility for generating Linux packages.
+homepage: https://github.com/bytepackager/packagecore
 commands:
   install:
     - python3 setup.py install --prefix=/usr --root="${BP_DESTDIR}"

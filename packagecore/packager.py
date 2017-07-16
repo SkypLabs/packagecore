@@ -125,7 +125,7 @@ class Packager(object):
         postInstallCommands=postInstallCommands,
         testInstallCommands=testInstallCommands)
 
-      # set optional fields
+      # set metadata fields
       if "maintainer" in conf:
         b.maintainer = conf["maintainer"]
       if "license" in conf:
@@ -134,6 +134,8 @@ class Packager(object):
         b.homepage = conf["homepage"]
       if "summary" in conf:
         b.summary = conf["summary"]
+
+      # set dependencies 
       if "builddeps" in data:
         b.buildDeps = data["builddeps"]
       if "deps" in data:
