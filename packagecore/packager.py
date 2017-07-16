@@ -73,12 +73,12 @@ class Packager(object):
         projectCompileCommands = _stringifyCommands(commands["compile"])
       if "install" in commands:
         projectInstallCommands = _stringifyCommands(commands["install"])
-      if "postInstall" in commands:
+      if "postinstall" in commands:
         projectPostInstallCommands = \
-            _stringifyCommands(commands["postInstall"])
-      if "testInstall" in commands:
+            _stringifyCommands(commands["postinstall"])
+      if "testinstall" in commands:
         projectTestInstallCommands = \
-            _stringifyCommands(commands["testInstall"])
+            _stringifyCommands(commands["testinstall"])
 
     # make sure if we're building a specific distribution it exists in this
     # configuration.
@@ -108,10 +108,10 @@ class Packager(object):
           compileCommands = _stringifyCommands(commands["compile"])
         if "install" in commands:
           installCommands = _stringifyCommands(commands["install"])
-        if "postInstall" in commands:
-          postInstallCommands = _stringifyCommands(commands["postInstall"])
-        if "testInstall" in commands:
-          testInstallCommands = _stringifyCommands(commands["testInstall"])
+        if "postinstall" in commands:
+          postInstallCommands = _stringifyCommands(commands["postinstall"])
+        if "testinstall" in commands:
+          testInstallCommands = _stringifyCommands(commands["testinstall"])
 
       # construct it with the required fields
       b = BuildData(
