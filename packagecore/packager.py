@@ -213,8 +213,14 @@ class Packager(object):
         # move the package to the current directory
         shutil.move(tmpfile, outfile)
       except:
-        print("Failed to build package for '%s'." % job.os)
+        print()
+        print("###########################################################")
+        print("# Failed to build package for '%s'. #######################" % \
+            job.os)
+        print("###########################################################")
         print(traceback.format_exc())
+        print("###########################################################")
+        print()
         success = False
     return success 
         
