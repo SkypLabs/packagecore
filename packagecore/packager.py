@@ -215,14 +215,14 @@ class Packager(object):
 
         print()
         print("###########################################################")
-        print("# Successfully built package for '%s'. ####################" % \
+        print("# Successfully built package for '%s'." % \
             job.os)
         print("###########################################################")
         print()
       except:
         print()
         print("###########################################################")
-        print("# Failed to build package for '%s'. #######################" % \
+        print("# Failed to build package for '%s'." % \
             job.os)
         print("###########################################################")
         print(traceback.format_exc())
