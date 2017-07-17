@@ -3,8 +3,8 @@ PackageCore
 
 ![pypi version](https://badge.fury.io/py/packagecore.svg)
 ![travis ci status](https://travis-ci.org/BytePackager/packagecore.svg?branch=master)
-![circle ci status](https://circleci.com/gh/BytePackager/packagecore/tree/master.svg?style=svg)
-![readthedocs status](https://packagecore.readthedocs.io/en/latest/?badge=latest)
+[![circle ci status](https://circleci.com/gh/BytePackager/packagecore/tree/master.svg?style=svg)
+[![readthedocs status](https://readthedocs.org/projects/packagecore/badge/?version=latest)](http://packagecore.readthedocs.io/en/latest/)
 
 Python 3 library for building Linux packages. Works in [Travis-CI](#travis-ci-usage) and [Circle-CI](#circle-ci-usage).
 
