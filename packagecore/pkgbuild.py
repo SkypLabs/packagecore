@@ -56,7 +56,6 @@ class PkgBuild(object):
     self._pkgTar = "pkg.tar"
 
 
-
   ##
   # @brief Create a tarball of the source code.
   #
@@ -245,6 +244,7 @@ BP_UPGRADE="true"
   def install(self, container):
     # test package
     # sudo
+    container.execute(["/usr/bin/pacman", "--noconfirm", "-yy"])
     container.execute(["/usr/bin/pacman", "--noconfirm", "-U", \
         os.path.join(container.getSharedDir(), self.getName())])
 
