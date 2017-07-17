@@ -48,17 +48,17 @@ class Packager(object):
       os.makedirs(self._outputDir)
 
     parser = ConfigParser()
-    builds = parser.parse(conf, release, version)
+    builds = parser.parse(conf=conf, version=version, release=release)
     
     if not distribution is None:
       soloBuild = None
       for b in builds:
-        if b.osName == distribution:
+        if b.os == distribution:
           soloBuild = b
           break
         else:
           # skip this package
-          print("Skipping '%s'." % b.osName)
+          print("Skipping '%s'." % b.os)
       if soloBuild is None:
         raise PackageNotFoundError("No '%s' listed in configuration." % \
             distribution)
