@@ -244,7 +244,7 @@ BP_UPGRADE="true"
   def install(self, container):
     # test package
     # sudo
-    container.execute(["/usr/bin/pacman", "--noconfirm", "-yy"])
+    container.execute(["/usr/bin/pacman", "--noconfirm", "-Syy"])
     container.execute(["/usr/bin/pacman", "--noconfirm", "-U", \
         os.path.join(container.getSharedDir(), self.getName())])
 
