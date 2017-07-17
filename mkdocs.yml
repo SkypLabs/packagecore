@@ -2,6 +2,8 @@ site_name: PackageCore
 docs_dir: ./doc
 pages:
 - Home: 'index.md'
-- Getting Started: '01_intro.md'
-- The packagecore Command: '02_command.md'
-- The packagecore.yaml File: '03_yaml.md'
+- Installing: '01_installing.md'
+- Getting Started: '02_intro.md'
+- The packagecore Command: '03_command.md'
+- The packagecore.yaml File: '04_yaml.md'
+- How it Works: '05_howitworks.md'
