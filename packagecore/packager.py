@@ -212,6 +212,13 @@ class Packager(object):
 
         # move the package to the current directory
         shutil.move(tmpfile, outfile)
+
+        print()
+        print("###########################################################")
+        print("# Successfully built package for '%s'. ####################" % \
+            job.os)
+        print("###########################################################")
+        print()
       except:
         print()
         print("###########################################################")
