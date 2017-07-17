@@ -15,9 +15,10 @@ Documentation at [packagecore.readthedocs.io](https://packagecore.readthedocs.io
 Requirements
 ------------
 
-PackageCore is written in `python 3` and uses the `PyYAML` module.
+PackageCore is written in `python 3` and uses the `PyYAML` and `setuptools`
+modules.
 
-PackageCore currently utilizes Docker to provide the distribution environments
+PackageCore utilizes Docker to provide the distribution environments
 for building and testing packages.
 
 
