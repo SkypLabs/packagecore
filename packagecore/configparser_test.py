@@ -8,7 +8,9 @@
 
 
 import unittest
-from .packager import Packager
+
+
+from .configparser import ConfigParser
 
 
 
@@ -64,11 +66,10 @@ CONF = {
 
 class TestPackager(unittest.TestCase):
   def test_init(self):
-    p = Packager(CONF, "/tmp/src", "/tmp/out", "1.2.3", 4)
-    # we access an internal variable of packager here and violate
-    # encapsulation. At some point input parsing should be seperated from the
-    # Packager class.
-    for b in p._queue:
+    p = ConfigParser()
+    builds = p.parse(CONF, "1.2.3", 4)
+
+    for b in builds:
       self.assertEqual(b.name, CONF["name"])
       self.assertEqual(b.maintainer, CONF["maintainer"])
       self.assertEqual(b.license, CONF["license"])
@@ -79,6 +80,6 @@ class TestPackager(unittest.TestCase):
       self.assertEqual(b.installCommands, CONF["commands"]["install"])
       self.assertEqual(b.postInstallCommands, CONF["commands"]["postinstall"])
       self.assertEqual(b.testInstallCommands, CONF["commands"]["testinstall"])
-      
+
       # still need to test listed dependencies and overridden commands
 
