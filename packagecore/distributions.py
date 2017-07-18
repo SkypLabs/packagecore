@@ -53,37 +53,32 @@ DATA = {
   },
   "fedora22": {
     "dockerImage": "fedora:22",
-    "packageType": "rpm",
+    "packageType": "rpm-dnf",
     "formatString": "{name}-{version}-{release}.fc22.{arch}.rpm"
   },
   "fedora23": {
     "dockerImage": "fedora:23",
-    "packageType": "rpm",
+    "packageType": "rpm-dnf",
     "formatString": "{name}-{version}-{release}.fc23.{arch}.rpm"
   },
   "fedora24": {
     "dockerImage": "fedora:24",
-    "packageType": "rpm",
+    "packageType": "rpm-dnf",
     "formatString": "{name}-{version}-{release}.fc24.{arch}.rpm"
   },
   "fedora25": {
     "dockerImage": "fedora:25",
-    "packageType": "rpm",
+    "packageType": "rpm-dnf",
     "formatString": "{name}-{version}-{release}.fc25.{arch}.rpm"
   },
   "opensuse42.1": {
     "dockerImage": "opensuse:42.1",
-    "packageType": "rpm-yast",
+    "packageType": "rpm-zypper",
     "formatString": "{name}-{version}-{release}.opensuse42.1.{arch}.rpm"
   },
   "opensuse42.2": {
     "dockerImage": "opensuse:42.2",
-    "packageType": "rpm-yast",
-    "formatString": "{name}-{version}-{release}.opensuse42.2.{arch}.rpm"
-  },
-  "opensuse42.2": {
-    "dockerImage": "opensuse:42.2",
-    "packageType": "rpm-yast",
+    "packageType": "rpm-zypper",
     "formatString": "{name}-{version}-{release}.opensuse42.2.{arch}.rpm"
   },
   "ubuntu14.04": {
