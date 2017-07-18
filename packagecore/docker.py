@@ -14,6 +14,7 @@ import random
 import time
 from subprocess import Popen, PIPE
 
+from .scriptfile import generateScript
 
 USERNAME = "builder"
 
@@ -152,6 +153,20 @@ class DockerContainer(object):
       _checkedDockerCommand(["exec", self._name] + cmd)
     else:
       _lxcAttachCommand(cmd, self._name)
+
+
+  ##
+  # @brief Generate and execute a script (i.e., write the contents of 'script'
+  # to a file and execute it in bash.
+  #
+  # @param script The contents of the script to execute.
+  #
+  # @return None
+  def executeScript(self, script):
+    scriptName = os.path.join(self.getSharedDir(), ".packagecore_script")
+    generateScript(scriptName, script)
+    self.execute(scriptName)
+    os.remove(scriptName)
 
 
   ##
