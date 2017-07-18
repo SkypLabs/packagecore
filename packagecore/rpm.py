@@ -67,7 +67,7 @@ which dnf && RPMQ="dnf repoquery" || RPMQ="repoquery"
 ${RPMQ} -l filesystem | grep -v 'Last metadata expiration check' | sort > "${FSFILES}"
 rpm -qlp "${RPM}" | sort > "${PKFILES}"
 
-comm -23 "${PKFILES}" "${FSFILES}" > "${NEWFILES}"
+comm -23 "${PKFILES}" "${FSFILES}" | sort -u > "${NEWFILES}"
 
 OUTPUT="$(rpmrebuild -p --change-spec-files="cat ${NEWFILES}" "${RPM}")"
 
