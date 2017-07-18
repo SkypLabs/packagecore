@@ -9,9 +9,9 @@ commands:
   compile:
     - gcc test.c -o test 
   install:
-    - install -D -m 644 test /var/tmp/
+    - install -D -m 755 test "${BP_DESTDIR}/var/tmp/test"
   testinstall:
-    - file /var/tmp/test || exit 1
+    - ls /var/tmp/test || exit 1
     - /var/tmp/test || exit 1
 packages:
   archlinux:
