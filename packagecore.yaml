@@ -16,6 +16,7 @@ packages:
     deps:
       - python
       - python-yaml
+      - python-setuptools
       - docker
   fedora25:
     builddeps:
@@ -23,6 +24,7 @@ packages:
       - python3-setuptools
     deps:
       - python3
+      - python3-setuptools
       - python3-PyYAML
       - docker
   ubuntu17.10:
@@ -32,4 +34,5 @@ packages:
     deps:
       - python3
       - python3-yaml
+      - python3-setuptools
       - docker
