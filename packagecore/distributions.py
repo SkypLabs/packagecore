@@ -71,6 +71,21 @@ DATA = {
     "packageType": "rpm",
     "formatString": "{name}-{version}-{release}.fc25.{arch}.rpm"
   },
+  "opensuse42.1": {
+    "dockerImage": "opensuse:42.1",
+    "packageType": "rpm-yast",
+    "formatString": "{name}-{version}-{release}.opensuse42.1.{arch}.rpm"
+  },
+  "opensuse42.2": {
+    "dockerImage": "opensuse:42.2",
+    "packageType": "rpm-yast",
+    "formatString": "{name}-{version}-{release}.opensuse42.2.{arch}.rpm"
+  },
+  "opensuse42.2": {
+    "dockerImage": "opensuse:42.2",
+    "packageType": "rpm-yast",
+    "formatString": "{name}-{version}-{release}.opensuse42.2.{arch}.rpm"
+  },
   "ubuntu14.04": {
     "dockerImage": "ubuntu:14.04",
     "packageType": "debian",
