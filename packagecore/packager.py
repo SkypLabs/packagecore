@@ -130,6 +130,8 @@ class Packager(object):
           # copy in the package for installation
           shutil.copy(tmpfile, container.getSharedDir())
           recipe.install(container)
+
+          container.executeScript(job.testInstallCommands)
         finally:
           container.stop()
 
