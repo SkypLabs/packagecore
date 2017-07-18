@@ -5,7 +5,7 @@ summary: Utility for generating Linux packages.
 homepage: https://github.com/bytepackager/packagecore
 commands:
   install:
-    - python3 setup.py install --prefix=/usr --root="${BP_DESTDIR}"
+    - python3 setup.py install --prefix=/usr --root="${BP_DESTDIR}" --single-version-externally-managed
   testinstall:
     - packagecore -h || exit 1 
 packages:
@@ -27,7 +27,7 @@ packages:
       - python3-setuptools
       - python3-PyYAML
       - docker
-  ubuntu17.10:
+  ubuntu16.04:
     builddeps:
       - python3
       - python3-setuptools
@@ -36,3 +36,6 @@ packages:
       - python3-yaml
       - python3-setuptools
       - docker
+    commands:
+      install:
+        - python3 setup.py install --install-layout=deb --prefix=/usr --root="${BP_DESTDIR}" --single-version-externally-managed
