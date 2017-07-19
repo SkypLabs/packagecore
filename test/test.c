@@ -15,6 +15,6 @@ int main(
     int argc,
     char ** argv)
 {
-  printf("Hello world.");
+  printf("Test compiled and ran successfully\n.");
   return 0;
 }
