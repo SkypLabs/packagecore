@@ -134,7 +134,15 @@ override the top-level commands inside of the package listing:
 -------------------------------------------------
 
 To use in `travis-ci`, you must be using at least Ubuntu 14.04 (Trusty) with
-`sudo`. Then, add the following `before_deploy` commands:
+`docker` and `sudo`. 
+
+```
+sudo: required
+services:
+  - docker
+```
+
+Then, add the following `before_deploy` commands:
 
 ```
 before_deploy:
@@ -154,10 +162,15 @@ deploy:
   file_glob: true
   file:
     - dist/*
+  on:
+    tags: true
   ...
 ```
 
-Assuming you name your tags `v1.2.3`
+If you want to upload your packages to your GitHub release page, follow the
+[Travis-CI](https://docs.travis-ci.com/user/deployment/releases/) instructions
+for how to fill out the rest of the deploy section.
+
 
 
 <a name="circle-ci-usage"></a>Usage in Circle-CI
