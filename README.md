@@ -134,7 +134,15 @@ override the top-level commands inside of the package listing:
 -------------------------------------------------
 
 To use in `travis-ci`, you must be using at least Ubuntu 14.04 (Trusty) with
-`sudo`. Then, add the following `before_deploy` commands:
+`docker` and `sudo`. 
+
+```
+sudo: required
+services:
+  - docker
+```
+
+Then, add the following `before_deploy` commands:
 
 ```
 before_deploy:
