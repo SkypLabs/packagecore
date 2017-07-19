@@ -85,10 +85,12 @@ class Packager(object):
         recipe = PkgBuild(job)
       elif pkgType == "debian":
         recipe = DebianPackage(job)
-      elif pkgType == "rpm":
-        recipe = RPM(job, useYum=False)
+      elif pkgType == "rpm-dnf":
+        recipe = RPM(job, packageManager="dnf")
       elif pkgType == "rpm-yum":
-        recipe = RPM(job, useYum=True)
+        recipe = RPM(job, packageManager="yum")
+      elif pkgType == "rpm-zypper":
+        recipe = RPM(job, packageManager="zypper")
       else:
         raise UnknownPackageTypeError("Unknown packaging type: %s" % pkgType) 
 

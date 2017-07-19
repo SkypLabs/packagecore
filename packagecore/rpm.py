@@ -17,9 +17,16 @@ from .buildvariables import BuildVariables
 from .scriptfile import generateScript 
 
 
+RPM_ZYPPER="zypper"
+RPM_DNF="dnf"
+RPM_YUM="yum"
+
+
 class InvalidStateError(Exception):
   pass
 
+class UnknownPackageManagerError(Exception):
+  pass
 
 def sanitize(version):
   return re.sub(r'[/\s:-]',"_",version)
@@ -30,14 +37,14 @@ class RPM(object):
   # @brief Create a new rpm object.
   #
   # @param data Information about the package to build.
-  # @param useYum Use yum instead of dnf to install packages.
+  # @param packageManager The package manager to use.
   #
   # @return The new object.
-  def __init__(self, data, useYum=False):
+  def __init__(self, data, packageManager):
     self._data = data
     self._sanitizedVersion = sanitize(data.version)
     self._specFile = None
-    self._useYum = useYum
+    self._packageManager = packageManager
 
 
   ##
@@ -64,7 +71,7 @@ NEWFILES="/tmp/.newfiles"
 
 which dnf && RPMQ="dnf repoquery" || RPMQ="repoquery"
 
-${RPMQ} -l filesystem | grep -v 'Last metadata expiration check' | sort > "${FSFILES}"
+rpm -ql filesystem | grep -v 'Last metadata expiration check' | sort > "${FSFILES}"
 rpm -qlp "${RPM}" | sort > "${PKFILES}"
 
 comm -23 "${PKFILES}" "${FSFILES}" | sort -u > "${NEWFILES}"
@@ -157,7 +164,7 @@ fi
     # install necessary utilities
 
     # will need to be back ported for centos
-    if self._useYum:
+    if self._packageManager == RPM_YUM:
       container.execute(["/usr/bin/yum", "install", "-y", "yum-utils", \
           "rpm-build", "which", "make"])
       # try to install rpmrebuild -- if it fails, add epel and try again
@@ -166,10 +173,16 @@ fi
       except:
         container.execute(["/usr/bin/yum", "install", "-y", "epel-release"])
         container.execute(["/usr/bin/yum", "install", "-y", "rpmrebuild"])
-    else:
+    elif self._packageManager == RPM_DNF:
       container.execute(["/usr/bin/dnf", "install", "-y", \
           "dnf-command(repoquery)", "rpm-build", "rpmrebuild", \
           "dnf-command(builddep)", "which", "make"])
+    elif self._packageManager == RPM_ZYPPER:
+      container.execute(["/usr/bin/zypper", "in", "-y", "rpmrebuild", \
+          "which", "make"])
+    else:
+      raise UnknownPackagerManagerError("Unknown packager manager " \
+          "'%s'." % self._packageManager) 
 
     self._specFile = os.path.join(container.getSharedDir(), "pkg.spec")
     self.generateSpecFile(container)
@@ -186,10 +199,19 @@ fi
     rootSrcDir = container.getSourceDir() 
 
     # will need to be back ported for centos
-    if self._useYum:
+    if self._packageManager == RPM_YUM:
       container.execute(["/usr/bin/yum-builddep", "-y", self._specFile])
-    else:
+    elif self._packageManager == RPM_DNF:
       container.execute(["/usr/bin/dnf", "builddep", "-y", self._specFile])
+    elif self._packageManager == RPM_ZYPPER:
+      # there is no buildep functionality of opensuse -- so we'll install by
+      # hand
+      container.execute(["/usr/bin/zypper", "in", "-y"] +
+          self._data.buildDeps)
+    else:
+      raise UnknownPackagerManagerError("Unknown packager manager " \
+          "'%s'." % self._packageManager) 
+
     # sudo
     container.execute(["rpmbuild", \
         "--define='_topdir %s'" % container.getSharedDir(), "-bb", \
@@ -206,13 +228,18 @@ fi
   # @return None 
   def install(self, container):
     # test package
-    if self._useYum:
+    if self._packageManager == RPM_YUM:
       container.execute(["yum", "install", "-y", \
           os.path.join(container.getSharedDir(), self.getName())])
-    else:
+    elif self._packageManager == RPM_DNF:
       container.execute(["dnf", "install", "-y", \
           os.path.join(container.getSharedDir(), self.getName())])
-    # sudo
+    elif self._packageManager == RPM_ZYPPER:
+      container.execute(["zypper", "in", "-y", \
+          os.path.join(container.getSharedDir(), self.getName())])
+    else:
+      raise UnknownPackagerManagerError("Unknown packager manager " \
+          "'%s'." % self._packageManager) 
 
 
   ##

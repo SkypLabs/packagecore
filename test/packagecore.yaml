@@ -29,6 +29,9 @@ packages:
   fedora25:
     builddeps:
       - gcc
+  opensuse42.2:
+    builddeps:
+      - gcc
   ubuntu16.04:
     builddeps:
       - gcc

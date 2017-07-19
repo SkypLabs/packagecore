@@ -13,6 +13,7 @@ import unittest
 from .builddata import generateMockData
 from .docker import MockContainer
 from .rpm import RPM
+from .rpm import RPM_DNF
 
 
 
@@ -20,7 +21,7 @@ class TestRPM(unittest.TestCase):
   def test_generateSpecFile(self):
     d = generateMockData() 
     c = MockContainer()
-    b = RPM(d, "%s-%s-%d.rpm")
+    b = RPM(d, RPM_DNF)
 
     b.prep(c)
 
@@ -34,7 +35,7 @@ class TestRPM(unittest.TestCase):
   def test_getName(self):
     d = generateMockData() 
     c = MockContainer()
-    b = RPM(d, "%s-%s-%d.rpm")
+    b = RPM(d, RPM_DNF)
 
     name = b.getName()
 
