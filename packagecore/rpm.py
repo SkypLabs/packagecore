@@ -181,7 +181,7 @@ fi
       container.execute(["/usr/bin/zypper", "in", "-y", "rpmrebuild", \
           "which", "make"])
     else:
-      raise UnknownPackagerManagerException("Unknown packager manager " \
+      raise UnknownPackagerManagerError("Unknown packager manager " \
           "'%s'." % self._packageManager) 
 
     self._specFile = os.path.join(container.getSharedDir(), "pkg.spec")
@@ -209,7 +209,7 @@ fi
       container.execute(["/usr/bin/zypper", "in", "-y"] +
           self._data.buildDeps)
     else:
-      raise UnknownPackagerManagerException("Unknown packager manager " \
+      raise UnknownPackagerManagerError("Unknown packager manager " \
           "'%s'." % self._packageManager) 
 
     # sudo
@@ -238,7 +238,7 @@ fi
       container.execute(["zypper", "in", "-y", \
           os.path.join(container.getSharedDir(), self.getName())])
     else:
-      raise UnknownPackagerManagerException("Unknown packager manager " \
+      raise UnknownPackagerManagerError("Unknown packager manager " \
           "'%s'." % self._packageManager) 
 
 
