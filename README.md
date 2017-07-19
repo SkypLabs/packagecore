@@ -1,4 +1,4 @@
-![PackageCore](doc/logo.svg)
+<img alt="PackageCore" src="doc/logo.svg"/>
 
 <br>
 
