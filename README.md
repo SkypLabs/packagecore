@@ -162,10 +162,15 @@ deploy:
   file_glob: true
   file:
     - dist/*
+  on:
+    tags: true
   ...
 ```
 
-Assuming you name your tags `v1.2.3`
+If you want to upload your packages to your GitHub release page, follow the
+[Travis-CI](https://docs.travis-ci.com/user/deployment/releases/) instructions
+for how to fill out the rest of the deploy section.
+
 
 
 <a name="circle-ci-usage"></a>Usage in Circle-CI
