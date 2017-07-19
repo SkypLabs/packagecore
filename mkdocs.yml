@@ -7,3 +7,5 @@ pages:
 - The packagecore Command: '03_command.md'
 - The packagecore.yaml File: '04_yaml.md'
 - How it Works: '05_howitworks.md'
+extra:
+  logo: logo.svg
