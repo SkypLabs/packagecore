@@ -1,5 +1,6 @@
-PackageCore
-===========
+![PackageCore](doc/logo.svg)
+
+<br>
 
 [![pypi version](https://badge.fury.io/py/packagecore.svg)](https://pypi.python.org/pypi/packagecore)
 [![travis ci status](https://travis-ci.org/BytePackager/packagecore.svg?branch=master)](https://travis-ci.org/BytePackager/packagecore)
