@@ -7,7 +7,9 @@
 [![circle ci status](https://circleci.com/gh/BytePackager/packagecore/tree/master.svg?style=svg)](https://circleci.com/gh/BytePackager/packagecore)
 [![readthedocs status](https://readthedocs.org/projects/packagecore/badge/?version=latest)](http://packagecore.readthedocs.io/en/latest/)
 
-Python 3 library for building Linux packages. Works in [Travis-CI](#travis-ci-usage) and [Circle-CI](#circle-ci-usage).
+Python 3 library for building and testing Linux packages for 
+multiple distributions.
+Works in [Travis-CI](#travis-ci-usage) and [Circle-CI](#circle-ci-usage).
 
 
 Documentation at [packagecore.readthedocs.io](https://packagecore.readthedocs.io).
