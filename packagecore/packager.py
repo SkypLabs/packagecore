@@ -130,10 +130,12 @@ class Packager(object):
         container = docker.start(build["dockerImage"])
         try:
           # copy in the package for installation
-          shutil.copy(tmpfile, container.getSharedDir())
+          dstFile = os.path.join(container.getSharedDir(), recipe.getName())
+          shutil.copy(tmpfile, dstFile)
           recipe.install(container)
 
-          container.executeScript(job.testInstallCommands)
+          container.executeScript(job.testInstallCommands, \
+              {"BP_PACKAGE_FILE": dstFile})
         finally:
           container.stop()
 

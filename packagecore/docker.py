@@ -163,9 +163,9 @@ class DockerContainer(object):
   # @param script The contents of the script to execute.
   #
   # @return None
-  def executeScript(self, script):
+  def executeScript(self, script, env=None):
     scriptName = os.path.join(self.getSharedDir(), ".packagecore_script")
-    generateScript(scriptName, script)
+    generateScript(scriptName, script, env)
     self.execute(scriptName)
     os.remove(scriptName)
 
