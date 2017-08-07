@@ -98,7 +98,9 @@ The Fields
 
         The commands to execute in order to test that the package is correct.
         These commands will be executed after the built package has been
-        installed inside of a fresh container. You can check to make sure files
+        installed inside of a fresh container. The package itself will also be
+        available inside of the container, pointed to by the
+        `${BP_PACKAGE_FILE}` variable. You can check to make sure files
         got installed in the correct locations:
 
         ```
