@@ -247,7 +247,7 @@ class Docker(object):
     output = str(stdout)
     print("DOCKER_INFO")
     print(output)
-    if output.find("runc") >= 0 or output.find("windows") >= 0:
+    if output.find("lxc-") < 0:
       print("Using 'exec'")
       self._useLXC = False
     else:
