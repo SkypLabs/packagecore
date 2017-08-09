@@ -30,7 +30,9 @@ def __open(filename):
 # @param env Environment variables to set in the script.
 #
 # @return None
-def generateScript(filename, cmds, env={}):
+def generateScript(filename, cmds, env=None):
+  if env is None:
+    env = {}
   with __open(filename) as scriptFile:
     scriptFile.write("#!/bin/bash -e\n")
     scriptFile.write("\n")
