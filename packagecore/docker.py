@@ -35,8 +35,9 @@ class DockerError(Exception):
 
 
 def _lxcAttachCommand(cmd, containerName):
-  p = Popen(["sudo lxc-attach -n " \
-      "\"$(docker inspect --format \"{{.Id}}\" %s)\" -- %s" % \
+  p = Popen(["CID=\"$(docker inspect --format \"{{.Id}}\" %s)\" && " \
+      "sudo lxc-attach -n \"${CID}\" " \
+      "-f \"/var/lib/docker/${CID}/config.lxc\" -- %s" % \
       (containerName, " ".join("\"{0}\"".format(c) for c in cmd))], shell=True)
   rc = p.wait()
   if rc != 0:
