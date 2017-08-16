@@ -27,7 +27,7 @@ packages:
   debian9:
     builddeps:
       - gcc
-  fedora25:
+  fedora26:
     builddeps:
       - gcc
   opensuse42.2:
