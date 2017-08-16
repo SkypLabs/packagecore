@@ -44,12 +44,12 @@ DATA = {
   "debian8": {
     "dockerImage": "debian:jessie",
     "packageType": "debian",
-    "formatString": "{name}_{version}-{release}_debian8.{arch}.rpm"
+    "formatString": "{name}_{version}-{release}_debian8.{arch}.deb"
   },
   "debian9": {
     "dockerImage": "debian:stretch",
     "packageType": "debian",
-    "formatString": "{name}_{version}-{release}_debian9.{arch}.rpm"
+    "formatString": "{name}_{version}-{release}_debian9.{arch}.deb"
   },
   "fedora22": {
     "dockerImage": "fedora:22",
