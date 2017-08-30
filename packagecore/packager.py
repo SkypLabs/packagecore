@@ -136,7 +136,8 @@ class Packager(object):
             print("No packages to build.")
             success = False
         for job in self._queue:
-            build = BUILDS[job.os]
+            osName = job.osName
+            build = BUILDS[osName]
             nameFormat = build["formatString"]
             pkgType = build["packageType"]
             if pkgType == "pkgbuild":
@@ -154,13 +155,13 @@ class Packager(object):
                     "Unknown packaging type: %s" % pkgType)
 
             try:
-                print("Building package for %s: %s" % (job.os, str(job)))
+                print("Building package for %s: %s" % (osName, str(job)))
                 self._build(job, recipe, packageNameFormat=nameFormat,
                             imageName=build["dockerImage"])
 
                 print()
                 print("###########################################################")
-                print("# Successfully built package for '%s'." % job.os)
+                print("# Successfully built package for '%s'." % osName)
                 print("###########################################################")
                 print()
             # we want to catch virtually all exceptions here
@@ -168,7 +169,7 @@ class Packager(object):
             except Exception:
                 print()
                 print("###########################################################")
-                print("# Failed to build package for '%s'." % job.os)
+                print("# Failed to build package for '%s'." % osName)
                 print("###########################################################")
                 print(traceback.format_exc())
                 print("###########################################################")

@@ -41,7 +41,7 @@ def main():
 
     packageCoreVersion = getVersion()
 
-    usage = "usage: %prog [options] <version> [<release number>]"
+    usage = "usage: %(prog)s [options] <version> [<release>]"
     parser = argparse.ArgumentParser(usage=usage)
 
     # we set the default to None here, so we can check if it has been, otherwise
@@ -54,7 +54,7 @@ def main():
     parser.add_argument("-C", "--src", dest="sourceDir",
                         metavar="<source dir>",
                         default="./", help="The source directory to build. "
-                        "Defaults to '%default'.")
+                        "Defaults to '%(default)s'.")
 
     parser.add_argument("-p", "--package", dest="distribution",
                         metavar="<distribution name>", default=None,
@@ -65,50 +65,55 @@ def main():
                         metavar="<output directory>", default=outputdir,
                         help="The directory to "
                         "put generated packages into. If the directory does not exist, it "
-                        "will be created. Defaults to %default.")
+                        "will be created. Defaults to %(default)s.")
 
     parser.add_argument("-d", "--distributions", action="store_true",
                         dest="showdistributions", help="Show a list of available Linux "
-                        "distributions to use as targets in the 'packages' section.")
+                        "distributions to use as targets in the 'packages' section.",
+                        default=False)
 
     parser.add_argument("-v", "--version", action="store_true",
-                        dest="showversion", help="Display the current version.")
+                        dest="showversion",
+                        help="Display the current version.", default=False)
 
-    (options, args) = parser.parse_args()
+    # parameters
+    parser.add_argument("version",
+                        help="The version of the package to generate (e.g., 1.2.3)")
+    parser.add_argument("release", nargs="?", type=int,
+                        help="The release number of the package to generate (e.g., 2)."
+                        " Defaults to '%(default)s'.", default=1)
 
-    if options.configfile is None:
-        options.configfile = os.path.join(options.sourceDir, configFilename)
+    args = parser.parse_args()
 
-    if not options.showdistributions is None:
+    print("args: {%s}" % args)
+    if args.configfile is None:
+        args.configfile = os.path.join(args.sourceDir, configFilename)
+
+    if args.showdistributions:
         showDistributions()
         return 0
-    elif not options.showversion is None:
+    elif args.showversion:
         print("%s %s" % (BIN_NAME, packageCoreVersion))
         return 0
     else:
-        if not args:
+        if not args.version:
             print("Must supply a version string.", file=sys.stderr)
             parser.print_help(file=sys.stderr)
             return -1
-        elif len(args) > 2:
-            print("Too many arguments.", file=sys.stderr)
-            parser.print_help(file=sys.stderr)
-            return -1
 
-        version = args[0]
-        if len(args) == 2:
-            release = int(args[1])
+        version = args.version
+        release = args.release
         print("Building with %s %s." % (BIN_NAME, packageCoreVersion))
         print("Building version '%s' release '%d'." % (version, release))
 
         # if we're using the default configFilename assume we mean in the source
         # directory
-        conf = YAMLConfigFile(options.configfile)
+        conf = YAMLConfigFile(args.configfile)
 
-        packager = Packager(conf=conf.getData(), srcDir=options.sourceDir,
-                            outputDir=options.outputdir,
+        packager = Packager(conf=conf.getData(), srcDir=args.sourceDir,
+                            outputDir=args.outputdir,
                             version=version, release=release,
-                            distribution=options.distribution)
+                            distribution=args.distribution)
         if packager.run():
             return 0
         else:
