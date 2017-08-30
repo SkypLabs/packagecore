@@ -7,7 +7,6 @@
 # @date 2017-05-28
 
 
-
 import unittest
 
 from .builddata import generateMockData
@@ -16,32 +15,29 @@ from .rpm import RPM
 from .rpm import RPM_DNF
 
 
-
 class TestRPM(unittest.TestCase):
-  def test_generateSpecFile(self):
-    d = generateMockData() 
-    c = MockContainer()
-    b = RPM(d, RPM_DNF)
+    def test_generateSpecFile(self):
+        data = generateMockData()
+        container = MockContainer()
+        binary = RPM(data, RPM_DNF)
 
-    b.prep(c)
+        binary.prep(container)
 
-    with open(b._specFile, "r") as ctrlFile:
-      content = ctrlFile.read()
+        with open(binary.getSpecFileName(), "r") as ctrlFile:
+            content = ctrlFile.read()
 
-    # perform a simplified check on the control file
-    self.assertGreaterEqual(content.find("Name: %s" % d.name), 0)
+        # perform a simplified check on the control file
+        self.assertGreaterEqual(content.find("Name: %s" % data.name), 0)
 
+    def test_getName(self):
+        data = generateMockData()
+        binary = RPM(data, RPM_DNF)
 
-  def test_getName(self):
-    d = generateMockData() 
-    c = MockContainer()
-    b = RPM(d, RPM_DNF)
+        name = binary.getName()
 
-    name = b.getName()
-
-    self.assertGreaterEqual(name.find(d.name),0)
-    self.assertGreaterEqual(name.find(d.version),0)
+        self.assertGreaterEqual(name.find(data.name), 0)
+        self.assertGreaterEqual(name.find(data.version), 0)
 
 
 if __name__ == '__main__':
-  unittest.main()
+    unittest.main()

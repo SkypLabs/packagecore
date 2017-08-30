@@ -10,8 +10,6 @@
 import os
 
 
-
-
 ##
 # @brief Open a file like object with executable permissions.
 #
@@ -19,7 +17,7 @@ import os
 #
 # @return The open file object.
 def __open(filename):
-  return os.fdopen(os.open(filename, os.O_WRONLY | os.O_CREAT, 0o755), "w")
+    return os.fdopen(os.open(filename, os.O_WRONLY | os.O_CREAT, 0o755), "w")
 
 
 ##
@@ -31,16 +29,13 @@ def __open(filename):
 #
 # @return None
 def generateScript(filename, cmds, env=None):
-  if env is None:
-    env = {}
-  with __open(filename) as scriptFile:
-    scriptFile.write("#!/bin/bash -e\n")
-    scriptFile.write("\n")
-    for k,v in env.items():
-      scriptFile.write("%s=\"%s\"\n" % (k,v))
-    scriptFile.write("\n")
-    scriptFile.write(cmds)
-    scriptFile.write("\n")
-
-
-
+    if env is None:
+        env = {}
+    with __open(filename) as scriptFile:
+        scriptFile.write("#!/bin/bash -e\n")
+        scriptFile.write("\n")
+        for key, value in env.items():
+            scriptFile.write("%s=\"%s\"\n" % (key, value))
+        scriptFile.write("\n")
+        scriptFile.write(cmds)
+        scriptFile.write("\n")
