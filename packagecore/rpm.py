@@ -7,7 +7,6 @@
 # @date 2017-05-26
 
 
-import shutil
 import os
 import os.path
 import re
@@ -15,6 +14,7 @@ import platform
 
 from .buildvariables import BuildVariables
 from .scriptfile import generateScript
+from .docker import DockerError
 
 
 RPM_ZYPPER = "zypper"
@@ -144,7 +144,7 @@ cp "${OUTRPM}" "${RPM}"
             specFile.write(self._data.installCommands)
             specFile.write("\n")
 
-            if len(self._data.postInstallCommands) > 0:
+            if self._data.postInstallCommands:
                 specFile.write("%post\n")
                 specFile.write("""
 if [[ "${1}" == "1" ]]; then
@@ -177,7 +177,7 @@ fi
             try:
                 container.execute(
                     ["/usr/bin/yum", "install", "-y", "rpmrebuild"])
-            except:
+            except DockerError:
                 container.execute(
                     ["/usr/bin/yum", "install", "-y", "epel-release"])
                 container.execute(
@@ -190,8 +190,8 @@ fi
             container.execute(["/usr/bin/zypper", "in", "-y", "rpmrebuild",
                                "which", "make"])
         else:
-            raise UnknownPackagerManagerError("Unknown packager manager "
-                                              "'%s'." % self._packageManager)
+            raise UnknownPackageManagerError("Unknown packager manager " \
+                                             "'%s'." % self._packageManager)
 
         self._specFile = os.path.join(container.getSharedDir(), "pkg.spec")
         self.generateSpecFile(container)
@@ -204,8 +204,6 @@ fi
     #
     # @return None
     def build(self, container):
-        rootSrcDir = container.getSourceDir()
-
         # will need to be back ported for centos
         if self._packageManager == RPM_YUM:
             container.execute(["/usr/bin/yum-builddep", "-y", self._specFile])
@@ -218,8 +216,8 @@ fi
             container.execute(["/usr/bin/zypper", "in", "-y"] +
                               self._data.buildDeps)
         else:
-            raise UnknownPackagerManagerError("Unknown packager manager "
-                                              "'%s'." % self._packageManager)
+            raise UnknownPackageManagerError("Unknown packager manager "
+                                             "'%s'." % self._packageManager)
 
         # sudo
         container.execute(["rpmbuild",
@@ -246,8 +244,8 @@ fi
             container.execute(["zypper", "in", "-y",
                                os.path.join(container.getSharedDir(), self.getName())])
         else:
-            raise UnknownPackagerManagerError("Unknown packager manager "
-                                              "'%s'." % self._packageManager)
+            raise UnknownPackageManagerError("Unknown packager manager "
+                                             "'%s'." % self._packageManager)
 
     ##
     # @brief Get the full package name.
@@ -262,8 +260,8 @@ fi
     #
     # @return The architecture name (e.g., x86_64).
     def getArch(self):
-        bits, fmt = platform.architecture()
-        # TODO: need to work with arm
+        bits = platform.architecture()[0]
+        # need to add arm support -- ticket #103
         if bits == "64bit":
             return "x86_64"
         else:

@@ -30,8 +30,8 @@ class BuildVariables(object):
     #
     # @return None
     def write(self, out):
-        for k, v in self.generate().items():
-            out.write("%s=\"%s\"\n" % (k, v))
+        for key, value in self.generate().items():
+            out.write("%s=\"%s\"\n" % (key, value))
 
     ##
     # @brief Generate a dictionary of the variables.

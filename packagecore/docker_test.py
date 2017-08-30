@@ -9,30 +9,32 @@
 
 import unittest
 
-from .docker import *
-from .distributions import *
+from .docker import \
+    Docker, \
+    DockerError
+from .distributions import DATA
 
 
 class TestDocker(unittest.TestCase):
     def test_runCommand(self):
         # attempt to download and run a simple ls on a container
-        d = Docker()
+        docker = Docker()
 
         # centos is nice and stable
-        c = d.start(DATA["centos7.3"]["dockerImage"])
+        container = docker.start(DATA["centos7.3"]["dockerImage"])
 
         # should succeed
-        c.execute("ls")
+        container.execute("ls")
 
         # should fail
         try:
             cmd = ["ls", "/dev/null/nothing"]
-            c.execute(cmd)
+            container.execute(cmd)
 
             # should have failed
-            self.Fail("'%s' did not throw an exception." % str(cmd))
-        except DockerError as e:
+            self.fail("'%s' did not throw an exception." % str(cmd))
+        except DockerError:
             # success
             pass
 
-        d.stop(c)
+        docker.stop(container)

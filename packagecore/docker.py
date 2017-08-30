@@ -22,7 +22,7 @@ USERNAME = "builder"
 def _makeDir(path):
     try:
         os.makedirs(path, 0o700)
-    except FileExistsError as e:
+    except FileExistsError:
         pass
 
 
@@ -35,13 +35,13 @@ class DockerError(Exception):
 
 
 def _lxcAttachCommand(cmd, containerName):
-    p = Popen(["CID=\"$(docker inspect --format \"{{.Id}}\" %s)\" && "
-               "sudo lxc-attach -n \"${CID}\" "
-               "-f \"/var/lib/docker/containers/${CID}/config.lxc\" -- %s" %
-               (containerName, " ".join("\"{0}\"".format(c) for c in cmd))], shell=True)
-    rc = p.wait()
-    if rc != 0:
-        raise DockerError("Command '%s' returned %d." % (cmd, rc))
+    proc = Popen(["CID=\"$(docker inspect --format \"{{.Id}}\" %s)\" && "
+                  "sudo lxc-attach -n \"${CID}\" "
+                  "-f \"/var/lib/docker/containers/${CID}/config.lxc\" -- %s" %
+                  (containerName, " ".join("\"{0}\"".format(c) for c in cmd))], shell=True)
+    status = proc.wait()
+    if status != 0:
+        raise DockerError("Command '%s' returned %d." % (cmd, status))
 
 
 def _dockerExecCOmmand(cmd, containerName):
@@ -49,15 +49,15 @@ def _dockerExecCOmmand(cmd, containerName):
 
 
 def _checkedDockerCommand(cmd):
-    rc = _uncheckedDockerCommand(cmd)
-    if rc != 0:
-        raise DockerError("Command '%s' returned %d." % (cmd, rc))
+    status = _uncheckedDockerCommand(cmd)
+    if status != 0:
+        raise DockerError("Command '%s' returned %d." % (cmd, status))
 
 
 def _uncheckedDockerCommand(cmd):
     proc = Popen(["docker"] + cmd)
-    rc = proc.wait()
-    return rc
+    status = proc.wait()
+    return status
 
 
 class MockContainer(object):
@@ -116,9 +116,9 @@ class DockerContainer(object):
         waitCycles = 0
         while self._proc.poll() is None:
             time.sleep(1)
-            p = Popen(["docker ps | grep '%s'" % self._name], shell=True)
-            rc = p.wait()
-            if rc == 0:
+            proc = Popen(["docker ps | grep '%s'" % self._name], shell=True)
+            status = proc.wait()
+            if status == 0:
                 running = True
                 break
             waitCycles += 1
@@ -217,7 +217,7 @@ class DockerContainer(object):
                 pass
             else:
                 shutil.rmtree(self.getSharedDir())
-        except:
+        except OSError:
             print("Warning: failed to remove shared directory.", file=sys.stderr)
 
 
@@ -229,7 +229,7 @@ class Docker(object):
     def __init__(self):
         # determine if we're using lxc or libcontainer
         grep = Popen(["docker", "info"], stdout=PIPE, stderr=PIPE)
-        stdout, stderr = grep.communicate()
+        stdout = grep.communicate()[0]
         output = str(stdout)
         print("DOCKER_INFO")
         print(output)
