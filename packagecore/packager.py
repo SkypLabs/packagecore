@@ -57,7 +57,7 @@ class Packager(object):
                     break
                 else:
                     # skip this package
-                    print("Skipping '%s'." % build.os)
+                    print("Skipping '%s'." % build.osName)
             if soloBuild is None:
                 raise PackageNotFoundError("No '%s' listed in configuration." %
                                            distribution)
