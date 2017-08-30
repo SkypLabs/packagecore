@@ -10,7 +10,7 @@
 import unittest
 
 
-from .configparser import ConfigParser
+from .configparser import parse
 
 
 CONF = {
@@ -66,22 +66,21 @@ CONF = {
 
 class TestPackager(unittest.TestCase):
     def test_init(self):
-        p = ConfigParser()
-        builds = p.parse(CONF, "1.2.3", 4)
+        builds = parse(CONF, "1.2.3", 4)
 
-        for b in builds:
-            self.assertEqual(b.name, CONF["name"])
-            self.assertEqual(b.maintainer, CONF["maintainer"])
-            self.assertEqual(b.license, CONF["license"])
-            self.assertEqual(b.summary, CONF["summary"])
-            self.assertEqual(b.homepage, CONF["homepage"])
+        for build in builds:
+            self.assertEqual(build.name, CONF["name"])
+            self.assertEqual(build.maintainer, CONF["maintainer"])
+            self.assertEqual(build.license, CONF["license"])
+            self.assertEqual(build.summary, CONF["summary"])
+            self.assertEqual(build.homepage, CONF["homepage"])
 
-            self.assertEqual(b.preCompileCommands,
+            self.assertEqual(build.preCompileCommands,
                              CONF["commands"]["precompile"])
-            self.assertEqual(b.installCommands, CONF["commands"]["install"])
-            self.assertEqual(b.postInstallCommands,
+            self.assertEqual(build.installCommands, CONF["commands"]["install"])
+            self.assertEqual(build.postInstallCommands,
                              CONF["commands"]["postinstall"])
-            self.assertEqual(b.testInstallCommands,
+            self.assertEqual(build.testInstallCommands,
                              CONF["commands"]["testinstall"])
 
             # still need to test listed dependencies and overridden commands

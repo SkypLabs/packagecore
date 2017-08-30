@@ -16,7 +16,7 @@ from .dpkg import DebianPackage
 from .rpm import RPM
 from .distributions import DATA as BUILDS
 from .scriptfile import generateScript
-from .configparser import ConfigParser
+from .configparser import parse
 
 
 class UnknownPackageTypeError(Exception):
@@ -47,18 +47,17 @@ class Packager(object):
         if not os.path.exists(self._outputDir):
             os.makedirs(self._outputDir)
 
-        parser = ConfigParser()
-        builds = parser.parse(conf=conf, version=version, release=release)
+        builds = parse(conf=conf, version=version, release=release)
 
         if not distribution is None:
             soloBuild = None
-            for b in builds:
-                if b.os == distribution:
-                    soloBuild = b
+            for build in builds:
+                if build.os == distribution:
+                    soloBuild = build
                     break
                 else:
                     # skip this package
-                    print("Skipping '%s'." % b.os)
+                    print("Skipping '%s'." % build.os)
             if soloBuild is None:
                 raise PackageNotFoundError("No '%s' listed in configuration." %
                                            distribution)
@@ -66,14 +65,76 @@ class Packager(object):
         else:
             self._queue = builds
 
+        self._docker = Docker()
+
+
+    ##
+    # @brief Build a given package.
+    #
+    # @param job The job associated with the package.
+    # @param recipe The recipe object for the package type.
+    # @param packageNameFormat The format of the package name.
+    # @param imageName The name of the docker image to use.
+    #
+    # @return None
+    def _build(self, job, recipe, packageNameFormat, imageName):
+        tmpfile = os.path.join("/tmp", recipe.getName())
+        name = packageNameFormat.format(
+            name=job.name, version=job.version,
+            release=job.releaseNum, arch=recipe.getArch())
+        outfile = os.path.join(self._outputDir, name)
+
+        # build the package
+        container = self._docker.start(imageName)
+
+        print("Using shared directory '%s' and source directory '%s'." %
+              (container.getSharedDir(), container.getSourceDir()))
+
+        try:
+            # copy in source -- we must be in the source directory
+            container.copySource(self._srcDir)
+
+            # run the 'pre' commands in the container
+            preCmdFile = os.path.join(
+                container.getSharedDir(), ".preCmds")
+            generateScript(preCmdFile, job.preCompileCommands)
+
+            recipe.prep(container)
+            recipe.build(container)
+
+            # copy out finished package
+            shutil.copy(
+                os.path.join(container.getSharedDir(),
+                             recipe.getName()),
+                tmpfile)
+        finally:
+            container.stop()
+
+        # spawn a new docker container
+        container = self._docker.start(imageName)
+        try:
+            # copy in the package for installation
+            dstFile = os.path.join(
+                container.getSharedDir(), recipe.getName())
+            shutil.copy(tmpfile, dstFile)
+            recipe.install(container)
+
+            container.executeScript(job.testInstallCommands,
+                                    {"BP_PACKAGE_FILE": dstFile})
+        finally:
+            container.stop()
+
+        # move the package to the current directory
+        shutil.move(tmpfile, outfile)
+
+
     ##
     # @brief Build each package.
     #
     # @return None
     def run(self):
         success = True
-        docker = Docker()
-        if len(self._queue) == 0:
+        if not self._queue:
             print("No packages to build.")
             success = False
         for job in self._queue:
@@ -94,68 +155,22 @@ class Packager(object):
                 raise UnknownPackageTypeError(
                     "Unknown packaging type: %s" % pkgType)
 
-            # remove package if it exists
-            outfile = os.path.join(self._outputDir,
-                                   nameFormat.format(name=job.name, version=job.version,
-                                                     release=job.releaseNum, arch=recipe.getArch()))
             try:
                 print("Building package for %s: %s" % (job.os, str(job)))
-                tmpfile = os.path.join("/tmp", recipe.getName())
-
-                # build the package
-                container = docker.start(build["dockerImage"])
-
-                print("Using shared directory '%s' and source directory '%s'." %
-                      (container.getSharedDir(), container.getSourceDir()))
-
-                try:
-                    # copy in source -- we must be in the source directory
-                    container.copySource(self._srcDir)
-
-                    # run the 'pre' commands in the container
-                    preCmdFile = os.path.join(
-                        container.getSharedDir(), ".preCmds")
-                    generateScript(preCmdFile, job.preCompileCommands)
-
-                    recipe.prep(container)
-                    recipe.build(container)
-
-                    # copy out finished package
-                    shutil.copy(
-                        os.path.join(container.getSharedDir(),
-                                     recipe.getName()),
-                        tmpfile)
-                finally:
-                    container.stop()
-
-                # spawn a new docker container
-                container = docker.start(build["dockerImage"])
-                try:
-                    # copy in the package for installation
-                    dstFile = os.path.join(
-                        container.getSharedDir(), recipe.getName())
-                    shutil.copy(tmpfile, dstFile)
-                    recipe.install(container)
-
-                    container.executeScript(job.testInstallCommands,
-                                            {"BP_PACKAGE_FILE": dstFile})
-                finally:
-                    container.stop()
-
-                # move the package to the current directory
-                shutil.move(tmpfile, outfile)
+                self._build(job, recipe, packageNameFormat=nameFormat, \
+                    imageName=build["dockerImage"])
 
                 print()
                 print("###########################################################")
-                print("# Successfully built package for '%s'." %
-                      job.os)
+                print("# Successfully built package for '%s'." % job.os)
                 print("###########################################################")
                 print()
-            except:
+            # we want to catch virtually all exceptions here
+            #pylint: disable=broad-except
+            except Exception:
                 print()
                 print("###########################################################")
-                print("# Failed to build package for '%s'." %
-                      job.os)
+                print("# Failed to build package for '%s'." % job.os)
                 print("###########################################################")
                 print(traceback.format_exc())
                 print("###########################################################")

@@ -7,7 +7,6 @@
 # @date 2017-05-26
 
 
-import shutil
 import os
 import os.path
 import re
@@ -26,7 +25,7 @@ def _sanitize(version):
 def _makeDir(path):
     try:
         os.makedirs(path, 0o755)
-    except FileExistsError as e:
+    except FileExistsError:
         pass
 
 
@@ -84,7 +83,7 @@ class DebianPackage(object):
     def generatePostInstallFile(self):
         postFilePath = os.path.join(self._pkgInfoDir, "postinst")
         # create post install script
-        if len(self._data.postInstallCommands) > 0:
+        if self._data.postInstallCommands:
             generateScript(postFilePath,
                            """
 if [[ -z "${2}" ]]; then
@@ -122,11 +121,9 @@ fi
     #
     # @return None
     def build(self, container):
-        rootSrcDir = container.getSourceDir()
-
         # install build deps
         container.execute(["/usr/bin/apt-get", "update", "-qy"])
-        if len(self._data.buildDeps) > 0:
+        if self._data.buildDeps:
             container.execute(["/usr/bin/apt-get", "install", "-qy"] +
                               self._data.buildDeps)
 
