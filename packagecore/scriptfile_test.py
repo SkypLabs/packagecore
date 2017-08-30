@@ -10,7 +10,6 @@
 import unittest
 import subprocess
 import os
-import stat
 
 from .scriptfile import generateScript
 
@@ -22,12 +21,12 @@ class TestScriptFile(unittest.TestCase):
         testFile = "/tmp/test.txt"
 
         cmds = """
-    X="${ENV_TEST}"
+X="${ENV_TEST}"
 
-    touch "${X}"
+touch "${X}"
 
-    exit 0
-    """
+exit 0
+"""
 
         generateScript(filename, cmds, {"ENV_TEST": testFile})
 
@@ -36,8 +35,8 @@ class TestScriptFile(unittest.TestCase):
         self.assertTrue(os.access(filename, os.X_OK | os.R_OK))
 
         # execute the script and expect it to create the file
-        rc = subprocess.call([filename])
-        self.assertEqual(rc, 0)
+        status = subprocess.call([filename])
+        self.assertEqual(status, 0)
 
         # check that the testFile got created by the script
         self.assertTrue(os.access(testFile, os.F_OK))
@@ -45,7 +44,3 @@ class TestScriptFile(unittest.TestCase):
         # cleanup
         os.remove(filename)
         os.remove(testFile)
-
-
-if __name__ == '__main__':
-    unittest.main()

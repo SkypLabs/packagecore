@@ -79,7 +79,7 @@ def parse(conf, version, release):
             name=conf["name"],
             version=version,
             releaseNum=release,
-            os=osName,
+            osName=osName,
             preCompileCommands=preCompileCommands,
             compileCommands=compileCommands,
             installCommands=installCommands,

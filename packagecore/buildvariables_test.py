@@ -8,7 +8,10 @@
 
 
 import unittest
-from .buildvariables import *
+from .buildvariables import \
+    BuildVariables, \
+    DESTDIR_KEY, \
+    SOURCEDIR_KEY
 
 
 TEST_DESTDIR = "/tmp/fakeroot"
@@ -28,25 +31,21 @@ class MockFile(object):
 
 class TestBuildVariables(unittest.TestCase):
     def test_write(self):
-        b = BuildVariables(destDir=TEST_DESTDIR, sourceDir=TEST_SOURCEDIR)
+        buildVars = BuildVariables(destDir=TEST_DESTDIR, sourceDir=TEST_SOURCEDIR)
 
-        m = MockFile()
-        b.write(m)
+        mockFile = MockFile()
+        buildVars.write(mockFile)
 
-        output = m.getBuffer()
+        output = mockFile.getBuffer()
         self.assertTrue(("%s=\"%s\"\n" %
                          (DESTDIR_KEY, TEST_DESTDIR)) in output)
         self.assertTrue(
             ("%s=\"%s\"\n" % (SOURCEDIR_KEY, TEST_SOURCEDIR)) in output)
 
     def test_generate(self):
-        b = BuildVariables(destDir=TEST_DESTDIR, sourceDir=TEST_SOURCEDIR)
+        buildVars = BuildVariables(destDir=TEST_DESTDIR, sourceDir=TEST_SOURCEDIR)
 
-        d = b.generate()
+        data = buildVars.generate()
 
-        self.assertEqual(d[DESTDIR_KEY], TEST_DESTDIR)
-        self.assertEqual(d[SOURCEDIR_KEY], TEST_SOURCEDIR)
-
-
-if __name__ == '__main__':
-    unittest.main()
+        self.assertEqual(data[DESTDIR_KEY], TEST_DESTDIR)
+        self.assertEqual(data[SOURCEDIR_KEY], TEST_SOURCEDIR)

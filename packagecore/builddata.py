@@ -19,9 +19,10 @@ def generateMockData():
 
     return data
 
-
+# some day it may be worth while to decompose this a bit more
+#pylint: disable=too-many-instance-attributes
 class BuildData(object):
-    def __init__(self, name, version, releaseNum, os, preCompileCommands,
+    def __init__(self, name, version, releaseNum, osName, preCompileCommands,
                  compileCommands, installCommands, postInstallCommands,
                  testInstallCommands):
         # we only want lower-case package names.
@@ -32,7 +33,7 @@ class BuildData(object):
         self.license = "Custom"
         self.homepage = ""
         self.summary = "none"
-        self.os = os
+        self.osName = osName
         self.buildDeps = []
         self.runDeps = []
         self.preCompileCommands = preCompileCommands
@@ -60,7 +61,7 @@ class BuildData(object):
       postInstallCommands: %s
       testInstallCommands: %s
       """ % (self.name, self.version, self.releaseNum, self.maintainer,
-             self.license, self.homepage, self.summary, self.os, self.buildDeps,
+             self.license, self.homepage, self.summary, self.osName, self.buildDeps,
              self.runDeps, self.preCompileCommands, self.compileCommands,
              self.installCommands, self.postInstallCommands,
              self.testInstallCommands)

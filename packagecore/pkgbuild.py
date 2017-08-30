@@ -7,7 +7,6 @@
 # @date 2017-05-28
 
 
-import shutil
 import os
 import os.path
 import tarfile
@@ -36,7 +35,7 @@ def _sanitize(version):
 def _makeDir(path):
     try:
         os.makedirs(path, 0o700)
-    except FileExistsError as e:
+    except FileExistsError:
         pass
 
 
@@ -80,6 +79,10 @@ class PkgBuild(object):
     #
     # @return None
     def generatePKGBUILDFile(self, container):
+        # while it doesn't make sense to break up the writing of the PKGBUILD
+        # file, it we could move the special root construction to another
+        # function.
+        #pylint: disable=too-many-statements
         buildEnv = BuildVariables(destDir="$pkgdir",
                                   sourceDir=container.getSourceDir())
 
@@ -110,7 +113,7 @@ class PkgBuild(object):
             pkgFile.write("replaces=()\n")
             pkgFile.write("backup=()\n")
             pkgFile.write("options=()\n")
-            if len(self._data.postInstallCommands) > 0:
+            if self._data.postInstallCommands:
                 instFileName = "%s.install" % self._data.name
                 pkgFile.write("install=%s\n" % instFileName)
                 # let users differentiate between post install and post upgrade
@@ -257,8 +260,8 @@ BP_UPGRADE="true"
     #
     # @return The architecture name (e.g., x86_64).
     def getArch(self):
-        bits, fmt = platform.architecture()
-        # TODO: need to work with arm
+        bits = platform.architecture()[0]
+        # Need to work with arm - ticket #103
         if bits == "64bit":
             return "x86_64"
         else:

@@ -52,7 +52,7 @@ class Packager(object):
         if not distribution is None:
             soloBuild = None
             for build in builds:
-                if build.os == distribution:
+                if build.osName == distribution:
                     soloBuild = build
                     break
                 else:
