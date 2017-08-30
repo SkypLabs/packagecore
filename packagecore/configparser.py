@@ -22,6 +22,8 @@ def _stringifyCommands(cmds):
 
 # Will need to refactor this someday so that pylint doesn't have to be disabled
 # pylint: disable=too-many-locals,too-many-branches
+
+
 def parse(conf, version, release):
     builds = []
 

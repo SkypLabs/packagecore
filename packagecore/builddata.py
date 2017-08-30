@@ -21,6 +21,8 @@ def generateMockData():
 
 # some day it may be worth while to decompose this a bit more
 #pylint: disable=too-many-instance-attributes
+
+
 class BuildData(object):
     def __init__(self, name, version, releaseNum, osName, preCompileCommands,
                  compileCommands, installCommands, postInstallCommands,

@@ -77,7 +77,8 @@ class TestPackager(unittest.TestCase):
 
             self.assertEqual(build.preCompileCommands,
                              CONF["commands"]["precompile"])
-            self.assertEqual(build.installCommands, CONF["commands"]["install"])
+            self.assertEqual(build.installCommands,
+                             CONF["commands"]["install"])
             self.assertEqual(build.postInstallCommands,
                              CONF["commands"]["postinstall"])
             self.assertEqual(build.testInstallCommands,

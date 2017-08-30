@@ -67,7 +67,6 @@ class Packager(object):
 
         self._docker = Docker()
 
-
     ##
     # @brief Build a given package.
     #
@@ -127,7 +126,6 @@ class Packager(object):
         # move the package to the current directory
         shutil.move(tmpfile, outfile)
 
-
     ##
     # @brief Build each package.
     #
@@ -157,8 +155,8 @@ class Packager(object):
 
             try:
                 print("Building package for %s: %s" % (job.os, str(job)))
-                self._build(job, recipe, packageNameFormat=nameFormat, \
-                    imageName=build["dockerImage"])
+                self._build(job, recipe, packageNameFormat=nameFormat,
+                            imageName=build["dockerImage"])
 
                 print()
                 print("###########################################################")
@@ -166,7 +164,7 @@ class Packager(object):
                 print("###########################################################")
                 print()
             # we want to catch virtually all exceptions here
-            #pylint: disable=broad-except
+            # pylint: disable=broad-except
             except Exception:
                 print()
                 print("###########################################################")

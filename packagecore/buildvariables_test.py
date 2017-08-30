@@ -31,7 +31,8 @@ class MockFile(object):
 
 class TestBuildVariables(unittest.TestCase):
     def test_write(self):
-        buildVars = BuildVariables(destDir=TEST_DESTDIR, sourceDir=TEST_SOURCEDIR)
+        buildVars = BuildVariables(
+            destDir=TEST_DESTDIR, sourceDir=TEST_SOURCEDIR)
 
         mockFile = MockFile()
         buildVars.write(mockFile)
@@ -43,7 +44,8 @@ class TestBuildVariables(unittest.TestCase):
             ("%s=\"%s\"\n" % (SOURCEDIR_KEY, TEST_SOURCEDIR)) in output)
 
     def test_generate(self):
-        buildVars = BuildVariables(destDir=TEST_DESTDIR, sourceDir=TEST_SOURCEDIR)
+        buildVars = BuildVariables(
+            destDir=TEST_DESTDIR, sourceDir=TEST_SOURCEDIR)
 
         data = buildVars.generate()
 
