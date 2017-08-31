@@ -248,7 +248,7 @@ fi
             # (though in theory if someone was able to get a malicious version
             # of a dependency installed that executed code that was able to
             # break out of the container, this would be an issue).
-            container.execute(["zypper", "in", "-y", "--no-gpg-checks",
+            container.execute(["zypper", "--no-gpg-checks", "in", "-y",
                                os.path.join(container.getSharedDir(), self.getName())])
         else:
             raise UnknownPackageManagerError("Unknown packager manager "
