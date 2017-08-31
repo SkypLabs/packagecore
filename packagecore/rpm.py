@@ -241,7 +241,14 @@ fi
             container.execute(["dnf", "install", "-y",
                                os.path.join(container.getSharedDir(), self.getName())])
         elif self._packageManager == RPM_ZYPPER:
-            container.execute(["zypper", "in", "-y",
+            # using the "--no-gpg-checks" is undesirable as we only want to
+            # allow this package ot be unsigned, but we want its dependencies
+            # to be signed. However, we're installing on a throw away container
+            # and not copying anything out, so the security risk is not large
+            # (though in theory if someone was able to get a malicious version
+            # of a dependency installed that executed code that was able to
+            # break out of the container, this would be an issue).
+            container.execute(["zypper", "in", "-y", "--no-gpg-checks",
                                os.path.join(container.getSharedDir(), self.getName())])
         else:
             raise UnknownPackageManagerError("Unknown packager manager "
