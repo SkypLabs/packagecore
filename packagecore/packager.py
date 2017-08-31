@@ -109,22 +109,22 @@ class Packager(object):
         finally:
             container.stop()
 
+        # move the package to the current directory
+        shutil.move(tmpfile, outfile)
+
         # spawn a new docker container
         container = self._docker.start(imageName)
         try:
             # copy in the package for installation
             dstFile = os.path.join(
                 container.getSharedDir(), recipe.getName())
-            shutil.copy(tmpfile, dstFile)
+            shutil.copy(outfile, dstFile)
             recipe.install(container)
 
             container.executeScript(job.testInstallCommands,
                                     {"BP_PACKAGE_FILE": dstFile})
         finally:
             container.stop()
-
-        # move the package to the current directory
-        shutil.move(tmpfile, outfile)
 
     ##
     # @brief Build each package.
