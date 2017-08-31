@@ -7,47 +7,47 @@
 # @date 2017-07-03
 
 
-
 import unittest
-from .buildvariables import * 
+from .buildvariables import \
+    BuildVariables, \
+    DESTDIR_KEY, \
+    SOURCEDIR_KEY
 
 
-TEST_DESTDIR="/tmp/fakeroot"
-TEST_SOURCEDIR="/tmp/my-pkg/src"
+TEST_DESTDIR = "/tmp/fakeroot"
+TEST_SOURCEDIR = "/tmp/my-pkg/src"
 
 
 class MockFile(object):
-  def __init__(self):
-    self._buffer = []
+    def __init__(self):
+        self._buffer = []
 
-  def write(self, chunk):
-    self._buffer.append(chunk)
+    def write(self, chunk):
+        self._buffer.append(chunk)
 
-  def getBuffer(self):
-    return ''.join(self._buffer)
+    def getBuffer(self):
+        return ''.join(self._buffer)
 
 
 class TestBuildVariables(unittest.TestCase):
-  def test_write(self):
-    b = BuildVariables(destDir=TEST_DESTDIR, sourceDir=TEST_SOURCEDIR)
-  
-    m = MockFile()
-    b.write(m)
+    def test_write(self):
+        buildVars = BuildVariables(
+            destDir=TEST_DESTDIR, sourceDir=TEST_SOURCEDIR)
 
-    output = m.getBuffer()
-    self.assertTrue(("%s=\"%s\"\n" % (DESTDIR_KEY, TEST_DESTDIR)) in output)
-    self.assertTrue( \
-        ("%s=\"%s\"\n" % (SOURCEDIR_KEY, TEST_SOURCEDIR)) in output)
+        mockFile = MockFile()
+        buildVars.write(mockFile)
 
+        output = mockFile.getBuffer()
+        self.assertTrue(("%s=\"%s\"\n" %
+                         (DESTDIR_KEY, TEST_DESTDIR)) in output)
+        self.assertTrue(
+            ("%s=\"%s\"\n" % (SOURCEDIR_KEY, TEST_SOURCEDIR)) in output)
 
-  def test_generate(self):
-    b = BuildVariables(destDir=TEST_DESTDIR, sourceDir=TEST_SOURCEDIR)
-  
-    d  = b.generate()
+    def test_generate(self):
+        buildVars = BuildVariables(
+            destDir=TEST_DESTDIR, sourceDir=TEST_SOURCEDIR)
 
-    self.assertEqual(d[DESTDIR_KEY], TEST_DESTDIR)
-    self.assertEqual(d[SOURCEDIR_KEY], TEST_SOURCEDIR)
+        data = buildVars.generate()
 
-
-if __name__ == '__main__':
-  unittest.main()
+        self.assertEqual(data[DESTDIR_KEY], TEST_DESTDIR)
+        self.assertEqual(data[SOURCEDIR_KEY], TEST_SOURCEDIR)

@@ -7,104 +7,103 @@
 # @date 2017-07-16
 
 
-
-
 from .builddata import BuildData
 
 
-
-
 def _stringifyCommands(cmds):
-  if isinstance(cmds, list):
-    cmds = "\n".join(cmds)
-  elif isinstance(cmds, str):
-    pass
-  else:
-    raise TypeError("Expected commands to be a string or list. Not '%s'." % \
-        type(cmds))
-  return cmds
+    if isinstance(cmds, list):
+        cmds = "\n".join(cmds)
+    elif isinstance(cmds, str):
+        pass
+    else:
+        raise TypeError("Expected commands to be a string or list. Not '%s'." %
+                        type(cmds))
+    return cmds
+
+# Will need to refactor this someday so that pylint doesn't have to be disabled
+# pylint: disable=too-many-locals,too-many-branches
 
 
-class ConfigParser(object):
-  def __init__(self):
-    pass
-
-  def parse(self, conf, version, release):
+def parse(conf, version, release):
     builds = []
 
     # set globals
     projectPreCompileCommands = ""
     projectCompileCommands = ""
-    projectInstallCommands = "" 
+    projectInstallCommands = ""
     projectPostInstallCommands = ""
     projectTestInstallCommands = ""
     if "commands" in conf:
-      commands = conf["commands"]
-      if "precompile" in commands:
-        projectPreCompileCommands = _stringifyCommands(commands["precompile"])
-      if "compile" in commands:
-        projectCompileCommands = _stringifyCommands(commands["compile"])
-      if "install" in commands:
-        projectInstallCommands = _stringifyCommands(commands["install"])
-      if "postinstall" in commands:
-        projectPostInstallCommands = \
-            _stringifyCommands(commands["postinstall"])
-      if "testinstall" in commands:
-        projectTestInstallCommands = \
-            _stringifyCommands(commands["testinstall"])
+        commands = conf["commands"]
+        if "precompile" in commands:
+            projectPreCompileCommands = _stringifyCommands(
+                commands["precompile"])
+        if "compile" in commands:
+            projectCompileCommands = _stringifyCommands(
+                commands["compile"])
+        if "install" in commands:
+            projectInstallCommands = _stringifyCommands(
+                commands["install"])
+        if "postinstall" in commands:
+            projectPostInstallCommands = \
+                _stringifyCommands(commands["postinstall"])
+        if "testinstall" in commands:
+            projectTestInstallCommands = \
+                _stringifyCommands(commands["testinstall"])
 
-    # parse packages 
+    # parse packages
     for osName, data in conf["packages"].items():
 
-      # set package specific commnds
-      preCompileCommands = projectPreCompileCommands
-      compileCommands = projectCompileCommands 
-      installCommands = projectInstallCommands 
-      postInstallCommands = projectPostInstallCommands 
-      testInstallCommands = projectTestInstallCommands 
-      if not data is None and "commands" in data:
-        commands = data["commands"]
-        if "precompile" in commands:
-          projectPreCompileCommands = \
-              _stringifyCommands(commands["precompile"])
-        if "compile" in commands:
-          compileCommands = _stringifyCommands(commands["compile"])
-        if "install" in commands:
-          installCommands = _stringifyCommands(commands["install"])
-        if "postinstall" in commands:
-          postInstallCommands = _stringifyCommands(commands["postinstall"])
-        if "testinstall" in commands:
-          testInstallCommands = _stringifyCommands(commands["testinstall"])
+        # set package specific commnds
+        preCompileCommands = projectPreCompileCommands
+        compileCommands = projectCompileCommands
+        installCommands = projectInstallCommands
+        postInstallCommands = projectPostInstallCommands
+        testInstallCommands = projectTestInstallCommands
+        if not data is None and "commands" in data:
+            commands = data["commands"]
+            if "precompile" in commands:
+                projectPreCompileCommands = \
+                    _stringifyCommands(commands["precompile"])
+            if "compile" in commands:
+                compileCommands = _stringifyCommands(commands["compile"])
+            if "install" in commands:
+                installCommands = _stringifyCommands(commands["install"])
+            if "postinstall" in commands:
+                postInstallCommands = _stringifyCommands(
+                    commands["postinstall"])
+            if "testinstall" in commands:
+                testInstallCommands = _stringifyCommands(
+                    commands["testinstall"])
 
-      # construct it with the required fields
-      b = BuildData(
-        name=conf["name"],
-        version=version,
-        releaseNum=release,
-        os=osName,
-        preCompileCommands=preCompileCommands,
-        compileCommands=compileCommands,
-        installCommands=installCommands,
-        postInstallCommands=postInstallCommands,
-        testInstallCommands=testInstallCommands)
+        # construct it with the required fields
+        buildData = BuildData(
+            name=conf["name"],
+            version=version,
+            releaseNum=release,
+            osName=osName,
+            preCompileCommands=preCompileCommands,
+            compileCommands=compileCommands,
+            installCommands=installCommands,
+            postInstallCommands=postInstallCommands,
+            testInstallCommands=testInstallCommands)
 
-      # set metadata fields
-      if "maintainer" in conf:
-        b.maintainer = conf["maintainer"]
-      if "license" in conf:
-        b.license = conf["license"]
-      if "homepage" in conf:
-        b.homepage = conf["homepage"]
-      if "summary" in conf:
-        b.summary = conf["summary"]
+        # set metadata fields
+        if "maintainer" in conf:
+            buildData.maintainer = conf["maintainer"]
+        if "license" in conf:
+            buildData.license = conf["license"]
+        if "homepage" in conf:
+            buildData.homepage = conf["homepage"]
+        if "summary" in conf:
+            buildData.summary = conf["summary"]
 
-      # set dependencies 
-      if "builddeps" in data:
-        b.buildDeps = data["builddeps"]
-      if "deps" in data:
-        b.runDeps = data["deps"]
+        # set dependencies
+        if "builddeps" in data:
+            buildData.buildDeps = data["builddeps"]
+        if "deps" in data:
+            buildData.runDeps = data["deps"]
 
-      builds.append(b)
+        builds.append(buildData)
 
     return builds
-

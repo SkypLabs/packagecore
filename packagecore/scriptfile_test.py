@@ -7,47 +7,40 @@
 # @date 2017-05-21
 
 
-
-
 import unittest
 import subprocess
 import os
-import stat
 
-from .scriptfile import generateScript 
+from .scriptfile import generateScript
 
 
 class TestScriptFile(unittest.TestCase):
-  def test_generateScriptEnv(self):
-    filename = "/tmp/test.sh"
+    def test_generateScriptEnv(self):
+        filename = "/tmp/test.sh"
 
-    testFile = "/tmp/test.txt"
+        testFile = "/tmp/test.txt"
 
-    cmds = """
-    X="${ENV_TEST}"
+        cmds = """
+X="${ENV_TEST}"
 
-    touch "${X}"
+touch "${X}"
 
-    exit 0
-    """
+exit 0
+"""
 
-    generateScript(filename, cmds, {"ENV_TEST": testFile})
+        generateScript(filename, cmds, {"ENV_TEST": testFile})
 
-    # check permissions
-    self.assertTrue(os.access(filename, os.F_OK))
-    self.assertTrue(os.access(filename, os.X_OK | os.R_OK))
+        # check permissions
+        self.assertTrue(os.access(filename, os.F_OK))
+        self.assertTrue(os.access(filename, os.X_OK | os.R_OK))
 
-    # execute the script and expect it to create the file
-    rc = subprocess.call([filename])
-    self.assertEqual(rc, 0)
+        # execute the script and expect it to create the file
+        status = subprocess.call([filename])
+        self.assertEqual(status, 0)
 
-    # check that the testFile got created by the script
-    self.assertTrue(os.access(testFile, os.F_OK))
+        # check that the testFile got created by the script
+        self.assertTrue(os.access(testFile, os.F_OK))
 
-    # cleanup
-    os.remove(filename)
-    os.remove(testFile)
-
-
-if __name__ == '__main__':
-  unittest.main()
+        # cleanup
+        os.remove(filename)
+        os.remove(testFile)

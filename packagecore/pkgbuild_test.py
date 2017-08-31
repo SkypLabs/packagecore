@@ -7,44 +7,33 @@
 # @date 2017-05-28
 
 
-
 import unittest
 import os
 
 from .builddata import generateMockData
 from .docker import MockContainer
-from .pkgbuild import PkgBuild 
-
-
-
-
+from .pkgbuild import PkgBuild
 
 
 class TestPkgBuild(unittest.TestCase):
-  def test_generatePKGBUILDFile(self):
-    d = generateMockData() 
-    c = MockContainer()
-    b = PkgBuild(d)
+    def test_generatePKGBUILDFile(self):
+        data = generateMockData()
+        container = MockContainer()
+        build = PkgBuild(data)
 
-    b.prep(c)
+        build.prep(container)
 
-    with open(os.path.join(c.getSharedDir(), "arch-pkg/PKGBUILD")) as ctrlFile:
-      content = ctrlFile.read()
+        with open(os.path.join(container.getSharedDir(), "arch-pkg/PKGBUILD")) as ctrlFile:
+            content = ctrlFile.read()
 
-    # perform a simplified check on the control file
-    self.assertGreaterEqual(content.find("pkgname=%s" % d.name), 0)
+        # perform a simplified check on the control file
+        self.assertGreaterEqual(content.find("pkgname=%s" % data.name), 0)
 
+    def test_getName(self):
+        data = generateMockData()
+        build = PkgBuild(data)
 
-  def test_getName(self):
-    d = generateMockData() 
-    c = MockContainer()
-    b = PkgBuild(d)
+        name = build.getName()
 
-    name = b.getName()
-
-    self.assertGreaterEqual(name.find(d.name),0)
-    self.assertGreaterEqual(name.find(d.version),0)
-
-
-if __name__ == '__main__':
-  unittest.main()
+        self.assertGreaterEqual(name.find(data.name), 0)
+        self.assertGreaterEqual(name.find(data.version), 0)

@@ -3,9 +3,10 @@ services:
   - docker
 python: '3.6'
 before_install:
-  - python3 -m pip install pyyaml
+  - python3 -m pip install pyyaml pylint
 script:
   - if [[ "${TRAVIS_TAG}" == "v${TRAVIS_TAG#v}" ]]; then [[ "${TRAVIS_TAG#v}" != "$(cat VERSION)" ]] && exit 1 || echo "Version match"; fi
+  - python3 -m pylint packagecore
   - ./setup.py test
   - ./setup.py sdist
   - python3 -m pip install --upgrade --force-reinstall "dist/packagecore-$(cat VERSION).tar.gz"
