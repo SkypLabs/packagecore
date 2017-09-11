@@ -181,6 +181,8 @@ fi
                 container.execute(
                     ["/usr/bin/yum", "install", "-y", "epel-release"])
                 container.execute(
+                    ["/usr/bin/yum-config-manager", "--enable", "epel"])
+                container.execute(
                     ["/usr/bin/yum", "install", "-y", "rpmrebuild"])
         elif self._packageManager == RPM_DNF:
             container.execute(["/usr/bin/dnf", "install", "-y",
