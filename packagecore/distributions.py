@@ -10,6 +10,11 @@
 # TODO: this should be editable and expandable by users in the future.
 
 DATA = {
+    "amazonlinux2017.03": {
+        "dockerImage": "amazonlinux:2017.03",
+        "packageType": "rpm-yum",
+        "formatString": "{name}-{version}-{release}.al.2017.03.{arch}.rpm"
+    },
     "archlinux": {
         "dockerImage": "packagecore/archlinux:latest",
         "packageType": "pkgbuild",
