@@ -15,15 +15,15 @@ commands:
     - ls /var/tmp/test || exit 1
     - /var/tmp/test || exit 1
 packages:
+  amazonlinux2017.03:
+    builddeps:
+      - gcc
   archlinux:
     builddeps:
       - gcc
   centos7.3:
     builddeps:
       - gcc
-    commands:
-      pre:
-        - yum install epel-release
   debian9:
     builddeps:
       - gcc
