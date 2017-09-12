@@ -7,6 +7,6 @@ pages:
 - The packagecore Command: '03_command.md'
 - The packagecore.yaml File: '04_yaml.md'
 - Integrating with CI/CD: '05_externalservice.md' 
-- How it Works: '05_howitworks.md'
+- How it Works: '06_howitworks.md'
 extra:
   logo: logo.svg

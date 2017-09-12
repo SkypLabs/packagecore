@@ -69,3 +69,6 @@ deployment:
       - sudo python3 -m pip install packagecore
       - packagecore -o "${CIRCLE_ARTIFACTS}" "${CIRCLE_TAG#v}"
 ```
+
+The above assumes that you prefix your version tags with a `v` (e.g.,
+`v1.2.3`).
