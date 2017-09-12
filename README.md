@@ -179,7 +179,8 @@ for how to fill out the rest of the deploy section.
 <a name="circle-ci-usage"></a>Usage in Circle-CI
 ------------------------------------------------
 
-To use in `circle-ci`, add the following to your configuration.
+To use in `circle-ci`, add the following to your configuration `circle.yaml`
+file (assuming version 1).
 
 ```
 machine:
@@ -190,7 +191,8 @@ deployment:
   package:
     tag: /^v.*$/
     commands:
-      - sudo apt-get install python3 python3-pip libyaml-dev
+      - sudo apt-get update -qy
+      - sudo apt-get install -qy python3 python3-pip libyaml-dev
       - sudo python3 -m pip install packagecore
-      - packagecore -o "${CIRCLE_ARTIFACTS}" "${CIRCLE_TAG}"
+      - packagecore -o "${CIRCLE_ARTIFACTS}" "${CIRCLE_TAG#v}"
 ```
