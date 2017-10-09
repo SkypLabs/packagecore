@@ -24,7 +24,7 @@ Then, add the following `before_deploy` commands:
 before_deploy:
   - sudo apt-get update -qy
   - sudo apt-get install -qy python3 python3-pip libyaml-dev
-  - python3 -m pip install packagecore
+  - sudo python3 -m pip install packagecore
   - packagecore -o dist "${TRAVIS_TAG#v}"
 ```
 
