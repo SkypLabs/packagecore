@@ -103,34 +103,28 @@ def main():
     if args.configfile is None:
         args.configfile = os.path.join(args.sourceDir, configFilename)
 
-    if args.showdistributions:
-        showDistributions()
-        return 0
-    elif args.showversion:
+    if not args.version:
+        print("Must supply a version string.", file=sys.stderr)
+        parser.print_help(file=sys.stderr)
+        return -1
+
+    version = args.version
+    release = args.release
+    print("Building with %s %s." % (BIN_NAME, packageCoreVersion))
+    print("Building version '%s' release '%d'." % (version, release))
+
+    # if we're using the default configFilename assume we mean in the source
+    # directory
+    conf = YAMLConfigFile(args.configfile)
+
+    packager = Packager(conf=conf.getData(), srcDir=args.sourceDir,
+                        outputDir=args.outputdir,
+                        version=version, release=release,
+                        distribution=args.distribution)
+    if packager.run():
         return 0
     else:
-        if not args.version:
-            print("Must supply a version string.", file=sys.stderr)
-            parser.print_help(file=sys.stderr)
-            return -1
-
-        version = args.version
-        release = args.release
-        print("Building with %s %s." % (BIN_NAME, packageCoreVersion))
-        print("Building version '%s' release '%d'." % (version, release))
-
-        # if we're using the default configFilename assume we mean in the source
-        # directory
-        conf = YAMLConfigFile(args.configfile)
-
-        packager = Packager(conf=conf.getData(), srcDir=args.sourceDir,
-                            outputDir=args.outputdir,
-                            version=version, release=release,
-                            distribution=args.distribution)
-        if packager.run():
-            return 0
-        else:
-            return 1
+        return 1
 
 
 if __name__ == "__main__":
