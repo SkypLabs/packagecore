@@ -19,11 +19,27 @@ from .distributions import DATA
 
 BIN_NAME = "packagecore"
 
+# pylint: disable=redefined-builtin
 
-def showDistributions():
-    print("Available distributions to use as targets in the 'packages' section:")
-    for distname in DATA:
-        print("\t%s" % distname)
+
+class ShowDistributionsAction(argparse.Action):
+    def __init__(self,
+                 option_strings,
+                 dest=None,
+                 default=None,
+                 help=None):
+        super(ShowDistributionsAction, self).__init__(
+            option_strings=option_strings,
+            dest=dest,
+            default=default,
+            nargs=0,
+            help=help)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        print("Available distributions to use as targets in the 'packages' section:")
+        for distname in DATA:
+            print("\t%s" % distname)
+        parser.exit()
 
 
 def getVersion():
@@ -67,13 +83,13 @@ def main():
                         "put generated packages into. If the directory does not exist, it "
                         "will be created. Defaults to %(default)s.")
 
-    parser.add_argument("-d", "--distributions", action="store_true",
+    parser.add_argument("-d", "--distributions", action=ShowDistributionsAction,
                         dest="showdistributions", help="Show a list of available Linux "
                         "distributions to use as targets in the 'packages' section.",
                         default=False)
 
-    parser.add_argument("-v", "--version", action="store_true",
-                        dest="showversion",
+    parser.add_argument("-v", "--version", dest="showversion", action="version",
+                        version=getVersion(),
                         help="Display the current version.", default=False)
 
     # parameters
@@ -89,35 +105,28 @@ def main():
     if args.configfile is None:
         args.configfile = os.path.join(args.sourceDir, configFilename)
 
-    if args.showdistributions:
-        showDistributions()
-        return 0
-    elif args.showversion:
-        print("%s %s" % (BIN_NAME, packageCoreVersion))
+    if not args.version:
+        print("Must supply a version string.", file=sys.stderr)
+        parser.print_help(file=sys.stderr)
+        return -1
+
+    version = args.version
+    release = args.release
+    print("Building with %s %s." % (BIN_NAME, packageCoreVersion))
+    print("Building version '%s' release '%d'." % (version, release))
+
+    # if we're using the default configFilename assume we mean in the source
+    # directory
+    conf = YAMLConfigFile(args.configfile)
+
+    packager = Packager(conf=conf.getData(), srcDir=args.sourceDir,
+                        outputDir=args.outputdir,
+                        version=version, release=release,
+                        distribution=args.distribution)
+    if packager.run():
         return 0
     else:
-        if not args.version:
-            print("Must supply a version string.", file=sys.stderr)
-            parser.print_help(file=sys.stderr)
-            return -1
-
-        version = args.version
-        release = args.release
-        print("Building with %s %s." % (BIN_NAME, packageCoreVersion))
-        print("Building version '%s' release '%d'." % (version, release))
-
-        # if we're using the default configFilename assume we mean in the source
-        # directory
-        conf = YAMLConfigFile(args.configfile)
-
-        packager = Packager(conf=conf.getData(), srcDir=args.sourceDir,
-                            outputDir=args.outputdir,
-                            version=version, release=release,
-                            distribution=args.distribution)
-        if packager.run():
-            return 0
-        else:
-            return 1
+        return 1
 
 
 if __name__ == "__main__":
