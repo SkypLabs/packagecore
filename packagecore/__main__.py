@@ -20,10 +20,24 @@ from .distributions import DATA
 BIN_NAME = "packagecore"
 
 
-def showDistributions():
-    print("Available distributions to use as targets in the 'packages' section:")
-    for distname in DATA:
-        print("\t%s" % distname)
+class ShowDistributionsAction(argparse.Action):
+    def __init__(self,
+                 option_strings,
+                 dest=None,
+                 default=None,
+                 help=None):
+        super(ShowDistributionsAction, self).__init__(
+            option_strings=option_strings,
+            dest=dest,
+            default=default,
+            nargs=0,
+            help=help)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        print("Available distributions to use as targets in the 'packages' section:")
+        for distname in DATA:
+            print("\t%s" % distname)
+        parser.exit()
 
 
 def getVersion():
@@ -67,13 +81,13 @@ def main():
                         "put generated packages into. If the directory does not exist, it "
                         "will be created. Defaults to %(default)s.")
 
-    parser.add_argument("-d", "--distributions", action="store_true",
+    parser.add_argument("-d", "--distributions", action=ShowDistributionsAction,
                         dest="showdistributions", help="Show a list of available Linux "
                         "distributions to use as targets in the 'packages' section.",
                         default=False)
 
-    parser.add_argument("-v", "--version", action="store_true",
-                        dest="showversion",
+    parser.add_argument("-v", "--version", dest="showversion", action="version",
+                        version=getVersion(),
                         help="Display the current version.", default=False)
 
     # parameters
@@ -93,7 +107,6 @@ def main():
         showDistributions()
         return 0
     elif args.showversion:
-        print("%s %s" % (BIN_NAME, packageCoreVersion))
         return 0
     else:
         if not args.version:
