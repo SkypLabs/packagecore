@@ -30,7 +30,7 @@ packages:
   fedora26:
     builddeps:
       - gcc
-  opensuse42.2:
+  opensuse42.3:
     builddeps:
       - gcc
   ubuntu16.04:
