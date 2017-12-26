@@ -30,9 +30,6 @@ packages:
   fedora27:
     builddeps:
       - gcc
-  fedora26:
-    builddeps:
-      - gcc
   opensuse42.3:
     builddeps:
       - gcc
