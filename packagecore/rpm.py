@@ -111,6 +111,9 @@ cp "${OUTRPM}" "${RPM}"
                                   sourceDir=container.getSourceDir())
 
         with open(self._specFile, "w") as specFile:
+            specFile.write("%%define _build_name_fmt %s\n" % self.getName())
+            specFile.write("%%define _rpmdir %s\n" % container.getSharedDir())
+            specFile.write("\n")
             specFile.write("Name: %s\n" % self._data.name)
             specFile.write("Version: %s\n" % self._sanitizedVersion)
             specFile.write("Release: %d%%{?dist}\n" % self._data.releaseNum)
@@ -127,9 +130,6 @@ cp "${OUTRPM}" "${RPM}"
             if not self._data.homepage is None and \
                     self._data.homepage != "":
                 specFile.write("URL: %s\n" % self._data.homepage)
-            specFile.write("\n")
-            specFile.write("%%define _build_name_fmt %s\n" % self.getName())
-            specFile.write("%%define _rpmdir %s\n" % container.getSharedDir())
             specFile.write("\n")
             specFile.write("%description\n")
             specFile.write("\n")
@@ -159,6 +159,11 @@ fi
             specFile.write("%files\n")
             specFile.write("/\n")
             specFile.write("\n")
+
+        with open(self._specFile, "r") as specFile:
+            print("Using specfile:{")
+            print(specFile.read())
+            print("}")
 
     ##
     # @brief Do preparation steps before building (e.g., generate files).
@@ -223,7 +228,7 @@ fi
 
         # sudo
         container.execute(["rpmbuild",
-                           "--define='_topdir %s'" % container.getSharedDir(), "-bb",
+                           "--define=_topdir %s" % container.getSharedDir(), "-bb",
                            self._specFile])
 
         self.__fixFiles(container)

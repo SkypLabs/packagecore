@@ -44,7 +44,7 @@ def _lxcAttachCommand(cmd, containerName):
         raise DockerError("Command '%s' returned %d." % (cmd, status))
 
 
-def _dockerExecCOmmand(cmd, containerName):
+def _dockerExecCommand(cmd, containerName):
     _checkedDockerCommand(["exec", containerName] + cmd)
 
 
