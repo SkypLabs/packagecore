@@ -27,16 +27,13 @@ packages:
   debian9:
     builddeps:
       - gcc
-  fedora26:
+  fedora27:
     builddeps:
       - gcc
   opensuse42.3:
     builddeps:
       - gcc
-  ubuntu16.04:
-    builddeps:
-      - gcc
-  ubuntu17.10:
+  ubuntu17.04:
     builddeps:
       - gcc
     
