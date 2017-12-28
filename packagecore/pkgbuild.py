@@ -206,8 +206,10 @@ BP_UPGRADE="true"
     def build(self, container):
         self.makeSrcTar(container)
 
-        # update image -- not sure if this is good to keep
-        # sudo
+        # update keyring
+        container.execute(["/usr/bin/pacman", "--noconfirm", "-S", "-yy",
+                           "archlinux-keyring"])
+        # update image
         container.execute(["/usr/bin/pacman", "--noconfirm", "-Su", "-yy"])
 
         # create a custom makepkg.conf
