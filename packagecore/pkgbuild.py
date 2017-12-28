@@ -208,7 +208,7 @@ BP_UPGRADE="true"
 
         # update keyring
         container.execute(["/usr/bin/pacman", "--noconfirm", "-S", "-yy",
-                 "archlinux-keyring"])
+                           "archlinux-keyring"])
         # update image
         container.execute(["/usr/bin/pacman", "--noconfirm", "-Su", "-yy"])
 
