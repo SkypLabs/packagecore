@@ -125,5 +125,10 @@ DATA = {
         "dockerImage": "ubuntu:17.10",
         "packageType": "debian",
         "formatString": "{name}_{version}-{release}_ubuntu17.10.{arch}.deb"
-    }
+    },
+    "ubuntu18.04": {
+        "dockerImage": "ubuntu:18.04",
+        "packageType": "debian",
+        "formatString": "{name}_{version}-{release}_ubuntu18.04.{arch}.deb"
+    },
 }
