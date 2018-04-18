@@ -33,7 +33,7 @@ packages:
   opensuse42.3:
     builddeps:
       - gcc
-  ubuntu17.04:
+  ubuntu16.04:
     builddeps:
       - gcc
     
