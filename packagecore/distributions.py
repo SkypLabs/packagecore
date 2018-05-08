@@ -86,6 +86,11 @@ DATA = {
         "packageType": "rpm-dnf",
         "formatString": "{name}-{version}-{release}.fc27.{arch}.rpm"
     },
+    "fedora28": {
+        "dockerImage": "fedora:28",
+        "packageType": "rpm-dnf",
+        "formatString": "{name}-{version}-{release}.fc28.{arch}.rpm"
+    },
     "opensuse42.1": {
         "dockerImage": "opensuse:42.1",
         "packageType": "rpm-zypper",
