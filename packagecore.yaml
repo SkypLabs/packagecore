@@ -18,7 +18,7 @@ packages:
       - python-yaml
       - python-setuptools
       - docker
-  fedora25:
+  fedora28:
     builddeps:
       - python3
       - python3-setuptools
