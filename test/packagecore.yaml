@@ -21,7 +21,7 @@ packages:
   archlinux:
     builddeps:
       - gcc
-  centos7.3:
+  centos7.4:
     builddeps:
       - gcc
   debian9:
