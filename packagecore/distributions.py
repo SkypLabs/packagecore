@@ -46,6 +46,11 @@ DATA = {
         "packageType": "rpm-yum",
         "formatString": "{name}-{version}-{release}.el7.3.centos.{arch}.rpm"
     },
+    "centos7.4": {
+        "dockerImage": "centos:7.4.1708",
+        "packageType": "rpm-yum",
+        "formatString": "{name}-{version}-{release}.el7.4.centos.{arch}.rpm"
+    },
     "debian8": {
         "dockerImage": "debian:jessie",
         "packageType": "debian",
