@@ -33,8 +33,10 @@ packages:
   opensuse42.3:
     builddeps:
       - gcc
-  ubuntu16.04:
+  ubuntu18.04:
     builddeps:
       - gcc
+      - python3
+      - python3-dateutil
     
     

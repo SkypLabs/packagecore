@@ -121,11 +121,17 @@ fi
     #
     # @return None
     def build(self, container):
+        # set timezone in container so tzdata can configure non-interactively
+        container.execute(["/bin/bash", "-c", "echo 'Etc/UTC' > /etc/timezone"])
+        container.execute(["/bin/bash", "-c", "ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime"])
+
         # install build deps
         container.execute(["/usr/bin/apt-get", "update", "-qy"])
         if self._data.buildDeps:
-            container.execute(["/usr/bin/apt-get", "install", "-qy"] +
-                              self._data.buildDeps)
+            container.executeScript(
+                "/usr/bin/apt-get install -qy %s" % (" ".join(self._data.buildDeps)),
+                {"DEBIAN_FRONTEND":"noninteractive",
+                 "DEBCONF_NONINTERACTIVE_SEEN":"true"})
 
         # create build script
         buildScriptFilename = ".bytepackager_build.sh"
@@ -171,8 +177,9 @@ fi
     def install(self, container):
         # manually install dependencies
         container.execute(["/usr/bin/apt-get", "update", "-qy"])
-        container.execute(["/usr/bin/apt-get", "install", "-qy"] +
-                          self._data.runDeps)
+        container.executeScript(
+            "/usr/bin/apt-get install -qy %s" % (" ".join(self._data.runDeps)),
+            {"DEBIAN_FRONTEND":"noninteractive"})
         # test package
         container.execute(["/usr/bin/dpkg", "-i",
                            os.path.join(container.getSharedDir(), self.getName())])
