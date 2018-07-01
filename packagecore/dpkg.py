@@ -126,7 +126,8 @@ fi
         if self._data.buildDeps:
             container.executeScript(
                 "/usr/bin/apt-get install -qy %s" % (" ".join(self._data.buildDeps)),
-                {"DEBIAN_FRONTEND":"noninteractive"})
+                {"DEBIAN_FRONTEND":"noninteractive",
+                 "DEBCONF_NONINTERACTIVE_SEEN":"true"})
 
         # create build script
         buildScriptFilename = ".bytepackager_build.sh"
