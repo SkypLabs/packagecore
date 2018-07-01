@@ -11,7 +11,7 @@ script:
   - ./setup.py test
   - ./setup.py sdist
   - sudo python3 -m pip install --upgrade --force-reinstall "dist/packagecore-$(cat VERSION).tar.gz"
-  - if [[ "${TRAVIS_TAG}" == "v${TRAVIS_TAG#v}" ]]; then packagecore -o /tmp -C test 1.2.3 4 || exit 1; else packagecore -C test -o /tmp -p ubuntu16.04 1.2.3 4 || exit 1; fi
+  - if [[ "${TRAVIS_TAG}" == "v${TRAVIS_TAG#v}" ]]; then packagecore -o /tmp -C test 1.2.3 4 || exit 1; else packagecore -C test -o /tmp -p ubuntu18.04 1.2.3 4 || exit 1; fi
 before_deploy:
   - packagecore "${TRAVIS_TAG#v}"
 deploy:
