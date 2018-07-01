@@ -124,8 +124,9 @@ fi
         # install build deps
         container.execute(["/usr/bin/apt-get", "update", "-qy"])
         if self._data.buildDeps:
-            container.execute(["/usr/bin/apt-get", "install", "-qy"] +
-                              self._data.buildDeps)
+            container.executeScript(
+                "/usr/bin/apt-get install -qy %s" % (" ".join(self._data.buildDeps)),
+                {"DEBIAN_FRONTEND":"noninteractive"})
 
         # create build script
         buildScriptFilename = ".bytepackager_build.sh"
@@ -171,8 +172,9 @@ fi
     def install(self, container):
         # manually install dependencies
         container.execute(["/usr/bin/apt-get", "update", "-qy"])
-        container.execute(["/usr/bin/apt-get", "install", "-qy"] +
-                          self._data.runDeps)
+        container.executeScript(
+            "/usr/bin/apt-get install -qy %s" % (" ".join(self._data.runDeps)),
+            {"DEBIAN_FRONTEND":"noninteractive"})
         # test package
         container.execute(["/usr/bin/dpkg", "-i",
                            os.path.join(container.getSharedDir(), self.getName())])
