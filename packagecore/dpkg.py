@@ -121,6 +121,10 @@ fi
     #
     # @return None
     def build(self, container):
+        # set timezone in container so tzdata can configure non-interactively
+        container.execute(["/bin/bash", "-c", "echo 'Etc/UTC' > /etc/timezone"])
+        container.execute(["/bin/bash", "-c", "ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime"])
+
         # install build deps
         container.execute(["/usr/bin/apt-get", "update", "-qy"])
         if self._data.buildDeps:
