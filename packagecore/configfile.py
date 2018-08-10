@@ -10,7 +10,7 @@
 import yaml
 
 
-class YAMLConfigFile(object):
+class YAMLConfigFile:
     def __init__(self, filename):
         with open(filename, "r") as yamlfile:
             self._data = yaml.load(yamlfile.read())

@@ -27,7 +27,7 @@ class PackageNotFoundError(Exception):
     pass
 
 
-class Packager(object):
+class Packager:
     ##
     # @brief Create a packager object.
     #

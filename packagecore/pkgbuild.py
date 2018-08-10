@@ -39,7 +39,7 @@ def _makeDir(path):
         pass
 
 
-class PkgBuild(object):
+class PkgBuild:
     ##
     # @brief Create a new package object.
     #

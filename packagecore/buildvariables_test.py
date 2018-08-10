@@ -18,7 +18,7 @@ TEST_DESTDIR = "/tmp/fakeroot"
 TEST_SOURCEDIR = "/tmp/my-pkg/src"
 
 
-class MockFile(object):
+class MockFile:
     def __init__(self):
         self._buffer = []
 

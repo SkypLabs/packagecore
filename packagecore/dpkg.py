@@ -29,7 +29,7 @@ def _makeDir(path):
         pass
 
 
-class DebianPackage(object):
+class DebianPackage:
     ##
     # @brief Create a new debian package object.
     #

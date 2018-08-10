@@ -11,7 +11,7 @@ DESTDIR_KEY = "BP_DESTDIR"
 SOURCEDIR_KEY = "BP_SOURCEDIR"
 
 
-class BuildVariables(object):
+class BuildVariables:
     ##
     # @brief Create a new set of environment variables for building.
     #
