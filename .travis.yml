@@ -4,13 +4,14 @@ services:
 python: '3.6'
 before_install:
   - sudo apt-get install -y python3-pip
-  - sudo python3 -m pip install pyyaml pylint
+  - sudo pip3 install --upgrade pip
+  - sudo pip3 install pyyaml pylint
 script:
   - if [[ "${TRAVIS_TAG}" == "v${TRAVIS_TAG#v}" ]]; then [[ "${TRAVIS_TAG#v}" != "$(cat VERSION)" ]] && exit 1 || echo "Version match"; fi
   - python3 -m pylint packagecore
   - ./setup.py test
   - ./setup.py sdist
-  - sudo python3 -m pip install --upgrade --force-reinstall "dist/packagecore-$(cat VERSION).tar.gz"
+  - sudo pip3 install --upgrade --force-reinstall "dist/packagecore-$(cat VERSION).tar.gz"
   - if [[ "${TRAVIS_TAG}" == "v${TRAVIS_TAG#v}" ]]; then packagecore -o /tmp -C test 1.2.3 4 || exit 1; else packagecore -C test -o /tmp -p ubuntu18.04 1.2.3 4 || exit 1; fi
 before_deploy:
   - packagecore "${TRAVIS_TAG#v}"

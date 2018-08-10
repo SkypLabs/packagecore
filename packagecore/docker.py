@@ -60,7 +60,7 @@ def _uncheckedDockerCommand(cmd):
     return status
 
 
-class MockContainer(object):
+class MockContainer:
     def __init__(self):
         _makeDir(self.getSharedDir())
 
@@ -83,7 +83,7 @@ class MockContainer(object):
         pass
 
 
-class DockerContainer(object):
+class DockerContainer:
     ##
     # @brief Create a new docker container (left running).
     #
@@ -221,7 +221,7 @@ class DockerContainer(object):
             print("Warning: failed to remove shared directory.", file=sys.stderr)
 
 
-class Docker(object):
+class Docker:
     ##
     # @brief Initialize a new docker wrapper.
     #

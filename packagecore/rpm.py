@@ -34,7 +34,7 @@ def sanitize(version):
     return re.sub(r'[/\s:-]', "_", version)
 
 
-class RPM(object):
+class RPM:
     ##
     # @brief Create a new rpm object.
     #
