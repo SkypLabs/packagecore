@@ -140,8 +140,23 @@ class Packager:
             build = BUILDS[osName]
             if not job.container is None:
                 build["dockerImage"] = job.container
-            if not "dockerImage" in build or build["dockerImage"] is None:
-                print("Missing docker image for '%s'." % job.osName)
+            elif not "dockerImage" in build or build["dockerImage"] is None:
+                print("??????????????????????????????????????????????????????")
+                print("? A docker container must be specified for '%s' in " \
+                    % job.osName)
+                print("? your .yaml file using the 'container' key.")
+                print("? Distributions without official containers in ")
+                print("? Dockerhub now require a user specified container.")
+                print("? For example:")
+                print("? ```")
+                print("? ...")
+                print("? %s:" % job.osName)
+                print("?   ...")
+                print("?   container: example.com/myuser/my-arch-linux:latest")
+                print("? ```")
+                print("??????????????????????????????????????????????????????")
+                raise RuntimeError("Bad configuration file.")
+
             nameFormat = build["formatString"]
             pkgType = build["packageType"]
             if pkgType == "pkgbuild":
