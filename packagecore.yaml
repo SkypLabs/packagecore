@@ -9,15 +9,6 @@ commands:
   testinstall:
     - packagecore -h || exit 1 
 packages:
-  archlinux:
-    builddeps:
-      - python
-      - python-setuptools
-    deps:
-      - python
-      - python-yaml
-      - python-setuptools
-      - docker
   fedora28:
     builddeps:
       - python3
