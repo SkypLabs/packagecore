@@ -15,6 +15,12 @@ Works in [Travis-CI](#travis-ci-usage) and [Circle-CI](#circle-ci-usage).
 Documentation at [packagecore.readthedocs.io](https://packagecore.readthedocs.io).
 
 
+NOTICE:
+-------
+Starting with version `0.10.0` you will need to specify a docker container
+image for `archlinux` in your configuration file.
+
+
 Requirements
 ------------
 
