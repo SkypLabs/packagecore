@@ -18,7 +18,8 @@ Documentation at [packagecore.readthedocs.io](https://packagecore.readthedocs.io
 NOTICE:
 -------
 Starting with version `0.10.0` you will need to specify a docker container
-image for `archlinux` in your configuration file.
+image for `archlinux` in your configuration file. See the
+[Configuration](#configuration) example for how to do this.
 
 
 Requirements
