@@ -16,6 +16,7 @@ def generateMockData():
     data.maintainer = "me"
     data.buildDeps = ["cmake", "gcc"]
     data.runDeps = ["openssl", "glibc", "libwxgtk"]
+    data.container = None
 
     return data
 
@@ -43,6 +44,7 @@ class BuildData:
         self.installCommands = installCommands
         self.postInstallCommands = postInstallCommands
         self.testInstallCommands = testInstallCommands
+        self.container = None
 
     def __str__(self):
         return \
@@ -62,8 +64,9 @@ class BuildData:
       installCommands: %s
       postInstallCommands: %s
       testInstallCommands: %s
+      container: %s
       """ % (self.name, self.version, self.releaseNum, self.maintainer,
              self.license, self.homepage, self.summary, self.osName, self.buildDeps,
              self.runDeps, self.preCompileCommands, self.compileCommands,
              self.installCommands, self.postInstallCommands,
-             self.testInstallCommands)
+             self.testInstallCommands, self.container)

@@ -6,6 +6,9 @@
 # @version 1
 # @date 2017-07-08
 
+# WARNING: Only use containers from trusted sources. Those listed here should
+# only be 'official' containers from hub.docker.com.
+
 
 # TODO: this should be editable and expandable by users in the future.
 
@@ -16,7 +19,9 @@ DATA = {
         "formatString": "{name}-{version}-{release}.al.2017.03.{arch}.rpm"
     },
     "archlinux": {
-        "dockerImage": "base/archlinux:latest",
+        # there is no official arch linux docker image, so users will have
+        # to specify one
+        "dockerImage": None,
         "packageType": "pkgbuild",
         "formatString": "{name}-{version}-{release}-{arch}.pkg.tar.xz"
     },

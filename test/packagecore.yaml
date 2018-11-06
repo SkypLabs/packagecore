@@ -18,9 +18,6 @@ packages:
   amazonlinux2017.03:
     builddeps:
       - gcc
-  archlinux:
-    builddeps:
-      - gcc
   centos7.4:
     builddeps:
       - gcc
