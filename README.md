@@ -94,6 +94,7 @@ packages:
       - cmake
     deps:
       - wxgtk
+    container: "example.com/my/custom/container"
   centos7.3:
     buildeps:
       - gcc
