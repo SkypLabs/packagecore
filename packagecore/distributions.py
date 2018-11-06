@@ -16,7 +16,9 @@ DATA = {
         "formatString": "{name}-{version}-{release}.al.2017.03.{arch}.rpm"
     },
     "archlinux": {
-        "dockerImage": "base/archlinux:latest",
+        # there is no official arch linux docker image, so users will have
+        # to specify one
+        "dockerImage": None,
         "packageType": "pkgbuild",
         "formatString": "{name}-{version}-{release}-{arch}.pkg.tar.xz"
     },
