@@ -142,8 +142,8 @@ class Packager:
                 build["dockerImage"] = job.container
             elif not "dockerImage" in build or build["dockerImage"] is None:
                 print("??????????????????????????????????????????????????????")
-                print("? A docker container must be specified for '%s' in " \
-                    % job.osName)
+                print("? A docker container must be specified for '%s' in "
+                      % job.osName)
                 print("? your .yaml file using the 'container' key.")
                 print("? Distributions without official containers in ")
                 print("? Dockerhub now require a user specified container.")
