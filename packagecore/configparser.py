@@ -103,6 +103,8 @@ def parse(conf, version, release):
             buildData.buildDeps = data["builddeps"]
         if "deps" in data:
             buildData.runDeps = data["deps"]
+        if "container" in data:
+            buildData.container = data["container"]
 
         builds.append(buildData)
 

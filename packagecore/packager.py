@@ -138,6 +138,10 @@ class Packager:
         for job in self._queue:
             osName = job.osName
             build = BUILDS[osName]
+            if not job.container is None:
+                build["dockerImage"] = job.container
+            if not "dockerImage" in build or build["dockerImage"] is None:
+                print("Missing docker image for '%s'." % job.osName)
             nameFormat = build["formatString"]
             pkgType = build["packageType"]
             if pkgType == "pkgbuild":
