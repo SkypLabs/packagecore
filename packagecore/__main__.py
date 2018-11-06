@@ -123,6 +123,10 @@ def main():
                         outputDir=args.outputdir,
                         version=version, release=release,
                         distribution=args.distribution)
+
+    print("This program is licensed under the GPLv2, a copy of which is ")
+    print("included with this software package.")
+
     if packager.run():
         return 0
     else:

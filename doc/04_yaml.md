@@ -157,4 +157,14 @@ The Fields
         `-DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config-3` when running
         `CMake`.
 
+    - `container` (string, optional):
 
+        This overrides the container specified in `distributions.py` and allows
+        for using custom container images in place of official ones from
+        hub.docker.com. For distributions which do not have official docker
+        containers, this field is required.
+
+        ```
+        archlinux:
+          container: "example.com/my/custom/container"
+        ```
