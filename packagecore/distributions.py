@@ -6,6 +6,9 @@
 # @version 1
 # @date 2017-07-08
 
+# WARNING: Only use containers from trusted sources. Those listed here should
+# only be 'official' containers from hub.docker.com.
+
 
 # TODO: this should be editable and expandable by users in the future.
 
